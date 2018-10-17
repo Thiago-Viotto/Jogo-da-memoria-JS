@@ -3,13 +3,29 @@ var figuras = [];
 var cartaVirada = [];
 var frontFaces;
 var inicio = 0; //controla inicio do jogo
-var tam = 0; //controla o tamanho do tabuleiro
+var tam = 0; //controla o tamanho do tabuleiroa
 var contAcertos = 0;
 var dimensaoTabuleiro;
 var contCliqueInd = 0;
 var ehIndividual = 0;
 var ehGrupo = 0;
 var recomeca = 0;
+
+var Partida = {
+    tamanho: 0,
+    jogador1: "",
+    jogador2: "",
+    emAndamento: false
+};
+
+function definirTamanho(tamanho) {
+    tam = tamanho*tamanho;
+    if(tam % 2 == 1) {
+        tam--;
+    }
+    dimensaoTabuleiro = (tamanho + "x" + tamanho);
+    ajustarImagem();
+}
 
 function verificaModoGrupo() {
     var radioGrupo = document.getElementById("radioGrupo").checked;
@@ -33,15 +49,6 @@ function verificaModoInd() {
     ehIndividual++; //indentifica qual é a opcao escolhida
 }
 
-//2x2
-function addDiv() {
-    tam = 4;
-    dimensaoTabuleiro = "2x2";
-    ajustarImagem();
-    alert("Você escolheu o tabuleiro 2x2");
-}
-
-//2x2
 function iniciarJogo() {
     contAcertos = 0;
     cartaVirada = [];
@@ -92,10 +99,10 @@ function iniciarJogo() {
 }
 
 function ajustarImagem() {
-    for (var i = 0; i < tam; i++) { //2x2
+    for (var i = 0; i < tam; i++) { 
         var figura = {
             src: "../img/" + i + ".jpg",
-            id: i % (tam / 2)
+            id: i % Math.ceil(Math.sqrt(tam))
         };
         figuras.push(figura);
         console.log(figuras);

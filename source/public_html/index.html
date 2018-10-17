@@ -11,7 +11,18 @@
         <div id="inicio">
             <img id="imgBemVindo" src="../img/bemvindo.png" alt="imagem bem vindo">
             <p class="paragrafo">Escolha a dimensão do tabuleiro</p>
-            <button id="btn2" onclick="addDiv()">2x2</button>
+            <select id="btn2" onchange="if(this.selectedIndex > 0) definirTamanho(this.value)">
+                <option value="0">Seleciona um valor</option>
+                <option value="2">2X2</option>
+                <option value="3">3X3</option>
+                <option value="4">4X4</option>
+                <option value="5">5X5</option>
+                <option value="6">6X6</option>
+                <option value="7">7X7</option>
+                <option value="7">8X8</option>
+                <option value="9">9X9</option>
+            </select>    
+
             <form>
                 <p class="paragrafo">Escolha o modo de jogo: </p><p id="Ind"><input id="radioInd" type="radio" name="modo" value="Individual" onclick="verificaModoInd()"/>Individual
                     <input id="radioGrupo" type="radio" name="modo" value="Em grupo" onclick="verificaModoGrupo()"/>Em grupo</p><br>
