@@ -1,0 +1,198 @@
+body{
+    background-color: #555; 
+    /* background-image: url("..img/fundoDZ.jpg"); */
+    text-align: center;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+#btn2{
+    font-size: 50px;
+}
+
+#btn3{
+    font-size: 50px;
+}
+
+#btn4{
+    font-size: 50px;
+}
+
+#btn5{
+    position:absolute; 
+    top:90%;
+    left:40%;
+}
+
+#btn6{
+    position:absolute; 
+    top:90%;
+    left:45%;
+}
+
+#btn7{
+    position:absolute; 
+    top:90%;
+    left:50%;
+}
+
+#paragrafoTabuleiro{
+    position:absolute; 
+    top:90%;
+    left:22%;
+    color:#FFFFFF;
+}
+
+#btnIniciar2{
+    position:absolute; 
+    top:90%;
+    left:55%;
+}
+
+#btnIniciar{
+    font-size: 50px;
+    margin-top: 20px;
+}
+
+#tabuleiro{
+    width: 1325px;
+    height: 625px;
+    border: 1px solid #111;
+    border-radius: 10px;
+    margin: 10px;
+    position: relative auto;
+    /* background-color: #A9F5F2; */
+    background: url("../img/fundo roxo.jpg");
+    background-size: 1325px 625px;
+}
+
+.paragrafo{
+    color: #FFFFFF;
+    font-size: 60px;
+    font-weight: bold;
+    text-shadow: 2px 5px #000000;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    text-align: center;
+}
+
+#imgBemVindo{
+    width: 1325px;
+    height: 125px;
+    margin-bottom: 30px;
+}
+
+#nomeJogador1{
+    display: none;
+}
+
+#nomeJogador2{
+    font-size: 60px;
+    display: none;
+}
+
+#Ind{
+    color: #FFFFFF;
+    font-size: 30px;
+    font-weight: bold;
+    text-shadow: 2px 1px #000000;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    text-align: center;
+}
+
+#Gr{
+    color: #FFFFFF;
+    font-size: 30px;
+    font-weight: bold;
+    text-shadow: 2px 1px #000000;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    text-align: center;
+}
+
+.face.virado.acertou{
+    box-shadow: 0 0 40px #0f0;
+}
+
+.class{
+    position: relative auto;
+}
+
+#imgGameOver{
+    width: 600px;
+    height: 200px;
+}
+
+.carta{
+    width: 150px;
+    height: 200px;
+    margin-left:6px;
+    position: absolute;
+    border-radius: 10px;
+    border:4px solid #000;
+    perspective: 600px; /*profundidade*/
+}
+
+.carta:hover{
+    box-shadow: 0 0 10px #190707;
+}
+
+.face {
+    width: 100%;
+    border-radius: 10px;
+    height: 100%;
+    position: absolute;
+    transition: all 1s;
+    backface-visibility: hidden; /*esconde visibilidade da face*/
+    background-repeat: no-repeat;
+    background-size: 150px 200px;
+}
+
+.Back{
+    background: url("../img/verso.jpg");
+    width: 100%;
+    border-radius: 10px;
+    height: 100%;
+    position: absolute;
+}
+
+.Back.virado{
+    transform: rotateY(180deg); 
+}
+
+.Front{
+    transform: rotateY(-180deg);
+}
+
+.Front.virado{
+    transform: rotateY(0deg);
+}
+
+#GameOver{
+    position: absolute;
+    top: 0;
+    width: 1325px;
+    border: 1px solid #111;
+    border-radius: 10px;
+    margin: 10px;
+    position: relative auto;
+    height: 625px;
+    background-color: rgba(0,0,0,0.5);
+    background-size: 1325px 625px;
+    z-index: -2;  /* controla o nível/produndidade da pilha - coloca div atrás */
+}
+
+#inicio{
+    position: absolute;
+    top: 0;
+    width: 1325px;
+    border: 1px solid #111;
+    border-radius: 10px;
+    margin: 10px;
+    position: relative auto;
+    height: 625px;
+    background: url("../img/fundoDZ.jpg");
+    background-size: 1325px 625px;
+    z-index: 1;  /* controla o nível/produndidade da pilha - coloca div na frente */
+}
