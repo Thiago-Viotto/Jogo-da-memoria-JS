@@ -1,6 +1,5 @@
 var cartaVirada = [];
 var frontFaces;
-var contAcertos = 0;
 
 /**
  * Enum
@@ -42,6 +41,53 @@ var Mesa = {
     }
 
     Mesa.cartas = novoArray;
+  },
+  
+  virarCarta: function(cartaElement) {
+    if (cartaVirada.length < 2) {  //vira duas cartas
+        var faces = cartaElement.getElementsByClassName("face");
+        //console.log(faces[0]); //faceBack
+        if (faces[0].classList.length > 2) {
+            return; //não permite que ao clicar duas vezes na mesma carta, ela desvira
+        }
+        faces[0].classList.toggle("virado"); //procura e desliga a face
+        faces[1].classList.toggle("virado"); //procura e desliga a face
+        cartaVirada.push(cartaElement);
+        
+        if (cartaVirada.length === 2) {
+            if (cartaVirada[0].childNodes[1].id === cartaVirada[1].childNodes[1].id) {  //acertou duas cartas
+                cartaVirada[0].childNodes[0].classList.toggle("acertou");
+                cartaVirada[0].childNodes[1].classList.toggle("acertou");
+                cartaVirada[1].childNodes[0].classList.toggle("acertou");
+                cartaVirada[1].childNodes[1].classList.toggle("acertou");
+
+                Partida.jogadores[Partida.jogadorAtual].acertos++;
+                
+                cartaVirada = [];
+                
+                var acertos = Partida.jogadores[0].acertos;
+                if(Partida.modoJogo == ModoJogo.GRUPO) {
+                  acertos += Partida.jogadores[1].acertos;
+                }
+                
+                // se acertou todas as cartas
+                if (acertos === Partida.tamanho * Partida.tamanho / 2) {
+                    Partida.gameOver();
+                }
+            }
+            
+            Partida.proximoJogador();
+        }
+    } else {
+        //console.log(cartaVirada);
+        cartaVirada[0].childNodes[0].classList.toggle("virado"); //no terceiro clique desvira as cartas viradas
+        cartaVirada[0].childNodes[1].classList.toggle("virado");
+        cartaVirada[1].childNodes[0].classList.toggle("virado");
+        cartaVirada[1].childNodes[1].classList.toggle("virado");
+
+        cartaVirada = [];
+    }
+
   }
 };
 
@@ -138,11 +184,12 @@ var Partida = {
         
         for(var coluna = 0; coluna < Partida.tamanho; coluna++) {
             var div = document.createElement("div");
-            div.setAttribute("class", "carta"); //cria uma classe
-            div.setAttribute("id", "carta" + linha); //cria uma div com nomes diferentes de acordo com linha
+            div.setAttribute("class", "carta");
+            div.setAttribute("id", "carta" + linha);
 
-            div.addEventListener("click", virarCarta, false); //vira a carta quando a carta é clicada          
-
+            div.addEventListener("click", function() {
+              Mesa.virarCarta(this);
+            }, false);
 
             var div2 = document.createElement("div");
             div2.setAttribute("class", "face Back");
@@ -170,7 +217,7 @@ var Partida = {
     var fimJogo = document.querySelector("#GameOver");
     //var inicioJogo = document.querySelector("#inicio");
     fimJogo.style.zIndex = 10; //coloca div GameOver na frente 
-    acertouCarta(); //seta valores do resultado
+    Partida.mostrarResultado(); //seta valores do resultado
     fimJogo.addEventListener("click", Partida.iniciarJogo, false);
   },
   
@@ -185,74 +232,24 @@ var Partida = {
     if(Partida.jogadores.length > 1) {
       document.getElementById("playerTurn").innerText = "Vez do jogador " + (Partida.jogadorAtual + 1) + (nome.length > 0? ": " + nome: "");
     }
+  },
+  
+  mostrarResultado: function() {
+    var nomeJgVencedor = document.getElementById("nomeJgVencedor");
+    var nomeJogador = document.getElementById("nome1").value;
+    if (Partida.modoJogo == ModoJogo.GRUPO) {
+      var nomeJogador2 = document.getElementById("nome2").value;
+    }
+    document.getElementById("nomeJgVencedor").value = nomeJogador;
+    document.getElementById("dimEscolhida").value = Partida.tamanho + "x" + Partida.tamanho;
+    document.getElementById("modoEscolhido").value = Partida.modoJogo == ModoJogo.INDIVIDUAL? "Individual" : "Grupo";
+    document.getElementById("totalPontos").value = "testando";
+    document.getElementById("totalTempo").value = "testando";
   }
 
 };
 
 
-
-
-function virarCarta() {
-    if (cartaVirada.length < 2) {  //vira duas cartas
-        var faces = this.getElementsByClassName("face");
-        //console.log(faces[0]); //faceBack
-        if (faces[0].classList.length > 2) {
-            return; //não permite que ao clicar duas vezes na mesma carta, ela desvira
-        }
-        faces[0].classList.toggle("virado"); //procura e desliga a face
-        faces[1].classList.toggle("virado"); //procura e desliga a face
-        cartaVirada.push(this);
-        
-        if (cartaVirada.length === 2) {
-            if (cartaVirada[0].childNodes[1].id === cartaVirada[1].childNodes[1].id) {  //acertou duas cartas
-                cartaVirada[0].childNodes[0].classList.toggle("acertou");
-                cartaVirada[0].childNodes[1].classList.toggle("acertou");
-                cartaVirada[1].childNodes[0].classList.toggle("acertou");
-                cartaVirada[1].childNodes[1].classList.toggle("acertou");
-
-                //acertouCarta();
-                Partida.jogadores[Partida.jogadorAtual].acertos++;
-                
-                cartaVirada = [];
-                
-                var acertos = Partida.jogadores[0].acertos;
-                if(Partida.modoJogo == ModoJogo.GRUPO) {
-                  acertos += Partida.jogadores[1].acertos;
-                }
-                
-                // se acertou todas as cartas
-                if (acertos === Partida.tamanho * Partida.tamanho / 2) {
-                    Partida.gameOver();
-                }
-            }
-            
-            Partida.proximoJogador();
-        }
-    } else {
-        //console.log(cartaVirada);
-        cartaVirada[0].childNodes[0].classList.toggle("virado"); //no terceiro clique desvira as cartas viradas
-        cartaVirada[0].childNodes[1].classList.toggle("virado");
-        cartaVirada[1].childNodes[0].classList.toggle("virado");
-        cartaVirada[1].childNodes[1].classList.toggle("virado");
-
-        cartaVirada = [];
-    }
-
-}
-
-function acertouCarta() {
-    var nomeJgVencedor = document.getElementById("nomeJgVencedor");
-    var nomeJogador = document.getElementById("nomeJogador1").value;
-    if (Partida.modoJogo == ModoJogo.GRUPO) {
-        var nomeJogador2 = document.getElementById("nomeJogador2").value;
-    }
-    document.getElementById("nomeJgVencedor").value = nomeJogador;
-    document.getElementById("dimEscolhida").value = Partida.tamanho + "x" + Partida.tamanho;
-    document.getElementById("modoEscolhido").value = "Individual";
-    document.getElementById("totalPontos").value = "testando";
-    document.getElementById("totalTempo").value = "testando";
-
-}
 
 function getCartaFront() {
     frontFaces = document.getElementsByClassName("Front");
