@@ -1,8 +1,6 @@
-var limite = 0;
 var cartaVirada = [];
 var frontFaces;
 var contAcertos = 0;
-var recomeca = 0;
 
 /**
  * Enum
@@ -56,6 +54,14 @@ var Jogador = function(nome) {
   this.acertos = 0;
 }
 
+/**
+ * Enum
+ */
+var GameState = {
+  NOT_RUNNING: 0,
+  RUNNING: 1
+};
+
 
 /**
  * Singleton class
@@ -63,6 +69,7 @@ var Jogador = function(nome) {
 var Partida = {
   tamanho: 0,
   modoJogo: ModoJogo.INDIVIDUAL,
+  state: GameState.NOT_RUNNING,
   
   jogadores: [],
   
@@ -104,15 +111,12 @@ var Partida = {
     Partida.jogadorAtual = -1;
     Partida.proximoJogador();
     
-    if (recomeca > 0) {
-        Mesa.embaralhar();
-        cartaVirada = [];
-        var frontFaces = document.getElementsByClassName("Front");
-        var backFaces = document.getElementsByClassName("Back");
-        for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
-            frontFaces[i].classList.remove("virado", "acertou");
-            backFaces[i].classList.remove("virado", "acertou");
-        }
+    cartaVirada = [];
+    var frontFaces = document.getElementsByClassName("Front");
+    var backFaces = document.getElementsByClassName("Back");
+    for (var i = 0; i < frontFaces.length; i++) {
+        frontFaces[i].classList.remove("virado", "acertou");
+        backFaces[i].classList.remove("virado", "acertou");
     }
     
     if(Partida.tamanho <= 0) {
@@ -124,39 +128,38 @@ var Partida = {
     inicioJogo.style.zIndex = -2; //coloca div inicio atras e tabuleiro na frente
     gameOver.style.zIndex = -2; //coloca div GameOver atras
     
-    if (limite === 0) {
-        Mesa.embaralhar();
+    Mesa.embaralhar();
+    
+    var cartasElement = document.getElementById("cartas");
+    cartasElement.innerHTML = "";
+    
+    for (var linha = 0; linha < Partida.tamanho; linha++) {
+        var linhaElement = document.createElement("div");
         
-        var tabuleiro = document.getElementById("tabuleiro");
-        
-        for (var linha = 0; linha < Partida.tamanho; linha++) {
-            var linhaElement = document.createElement("div");
+        for(var coluna = 0; coluna < Partida.tamanho; coluna++) {
+            var div = document.createElement("div");
+            div.setAttribute("class", "carta"); //cria uma classe
+            div.setAttribute("id", "carta" + linha); //cria uma div com nomes diferentes de acordo com linha
+
+            div.addEventListener("click", virarCarta, false); //vira a carta quando a carta é clicada          
+
+
+            var div2 = document.createElement("div");
+            div2.setAttribute("class", "face Back");
+            div.appendChild(div2);
+            var div3 = document.createElement("div");
+            div3.setAttribute("class", "face Front");
+            div.appendChild(div3);
             
-            for(var coluna = 0; coluna < Partida.tamanho; coluna++) {
-                var div = document.createElement("div");
-                div.setAttribute("class", "carta"); //cria uma classe
-                div.setAttribute("id", "carta" + linha); //cria uma div com nomes diferentes de acordo com linha
-
-                div.addEventListener("click", virarCarta, false); //vira a carta quando a carta é clicada          
-
-
-                var div2 = document.createElement("div");
-                div2.setAttribute("class", "face Back");
-                div.appendChild(div2);
-                var div3 = document.createElement("div");
-                div3.setAttribute("class", "face Front");
-                div.appendChild(div3);
-                
-                linhaElement.appendChild(div);
-            }
-           
-           tabuleiro.appendChild(linhaElement);
+            linhaElement.appendChild(div);
         }
-        
-        document.body.appendChild(tabuleiro);
+       
+       cartasElement.appendChild(linhaElement);
     }
+    
+    document.body.appendChild(document.getElementById("tabuleiro"));
+    
     getCartaFront(); // muda a frente da carta por uma imagem
-    limite = 1;
   },
   
   reiniciarJogo: function() {
@@ -220,7 +223,6 @@ function virarCarta() {
                 // se acertou todas as cartas
                 if (acertos === Partida.tamanho * Partida.tamanho / 2) {
                     Partida.gameOver();
-                    recomeca++;
                 }
             }
             
