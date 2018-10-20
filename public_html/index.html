@@ -12,25 +12,28 @@
         <div id="app">
           <div id="telasContainer">
             <div id="inicio">
-                <img src="../img/bemvindo.png" alt="imagem bem vindo" style="max-width: 90%; margin-bottom: 30px;">
+                <img src="../img/bemvindo.png" alt="imagem bem vindo" style="max-width: 90%; margin-bottom: 15px;">
                 <p class="paragrafo">Escolha a dimensão do tabuleiro</p>
                 <button id="btn2" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
                 <button id="btn3" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
                 <button id="btn4" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>
-                <form>
+                
+                <div style="margin-top: 15px;">
                     <p class="paragrafo">Escolha o modo de jogo: </p>
-                    <p id="Ind">
-                      <input id="radioInd" type="radio" name="modo" value="Individual" onclick="Partida.mudarModoJogo(ModoJogo.INDIVIDUAL);" style="border: 0px; width: 20px; height: 20px;" checked="true"/>
-                      <label for="radioInd">Individual</label>
-                      
-                      <input id="radioGrupo" type="radio" name="modo" value="Em grupo" onclick="Partida.mudarModoJogo(ModoJogo.GRUPO);" style="border: 0px; width: 20px; height: 20px; margin-left: 30px;"/>
-                      <label for="radioGrupo">Em grupo</label>
-                    </p>
-                    <br>
-                    <p class="paragrafo" id="nomeJogador1">Nome do jogador 1: <input type="text" id="nome1"/></p>
-                    <br>
-                    <p class="paragrafo" id="nomeJogador2" style="visibility: hidden;">Nome do jogador 2: <input type="text" id="nome2"/></p>
-                </form>
+                    
+                    <input id="radioInd" type="radio" name="modo" value="Individual" onclick="Partida.mudarModoJogo(ModoJogo.INDIVIDUAL);" checked="true"/>
+                    <label for="radioInd" style="font-size: 30px; margin-right: 25px;">Individual</label>
+                    
+                    <input id="radioGrupo" type="radio" name="modo" value="Em grupo" onclick="Partida.mudarModoJogo(ModoJogo.GRUPO);"/>
+                    <label for="radioGrupo" style="font-size: 30px;">Em grupo</label>
+                    
+                    <div style="margin-top: 20px;">
+                      <label for="nome1">Nome do jogador 1:</label> <input type="text" id="nome1">
+                    </div>
+                    <div id="nomeJogador2" style="visibility: hidden; margin-top: 15px;">
+                      <label for="nome2">Nome do jogador 2:</label> <input type="text" id="nome2">
+                    </div>
+                </div>
                 <button id="btnIniciar" onclick="Partida.iniciarJogo()">Iniciar Jogo</button>
             </div>
 
@@ -39,7 +42,7 @@
                 
                 <div id="cartas"></div>
                 
-                <p id="paragrafoTabuleiro">Escolha a dimensão do tabuleiro: </p>
+                <p>Escolha a dimensão do tabuleiro: </p>
                 <button id="btn5" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
                 <button id="btn6" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
                 <button id="btn7" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>

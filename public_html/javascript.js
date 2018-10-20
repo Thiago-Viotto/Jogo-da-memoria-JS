@@ -238,7 +238,7 @@ var Partida = {
       b.style.backgroundColor = "";
     }
     
-    botao.style.backgroundColor = "#0af";
+    botao.style.backgroundColor = "#3cf";
   },
   
   mudarModoJogo: function(modo) {
