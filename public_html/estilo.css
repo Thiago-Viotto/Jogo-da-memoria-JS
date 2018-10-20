@@ -85,12 +85,12 @@ body{
 }
 
 #nomeJogador1{
-    display: none;
+    display: inline-block;
 }
 
 #nomeJogador2{
     font-size: 60px;
-    display: none;
+    display: inline-block;
 }
 
 #Ind{

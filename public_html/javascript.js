@@ -25,16 +25,13 @@ var Partida = {
 
 
 function verificaModoGrupo() {
-    document.getElementById("nomeJogador1").style.display = "inline";
-    document.getElementById("nomeJogador2").style.display = "inline";
+    document.getElementById("nomeJogador2").style.visibility = "visible";
     
     Partida.modoJogo = ModoJogo.GRUPO
 }
 
 function verificaModoInd() {
-    document.getElementById("nomeJogador1").style.display = "inline";
-    
-    document.getElementById("nomeJogador2").style.display = "none";
+    document.getElementById("nomeJogador2").style.visibility = "hidden";
     
     Partida.modoJogo = ModoJogo.INDIVIDUAL;
 }
