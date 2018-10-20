@@ -9,16 +9,60 @@ var ModoJogo = {
 };
 
 /**
+ * Singleton class
+ */
+var ControladorTelas = {
+  exibirInicio: function() {
+    document.getElementById("inicio").style.display = "block";
+    document.getElementById("tabuleiro").style.display = "none";
+    document.getElementById("GameOver").style.display = "none";
+  },
+  exibirTabuleiro: function() {
+    document.getElementById("inicio").style.display = "none";
+    document.getElementById("tabuleiro").style.display = "block";
+    document.getElementById("GameOver").style.display = "none";
+  },
+  exibirResultado: function() {
+    document.getElementById("inicio").style.display = "none";
+    document.getElementById("tabuleiro").style.display = "block";
+    document.getElementById("GameOver").style.display = "block";
+  }
+};
+
+/**
  * Class
  */
-var Carta = function(rootElement, frontFaceElement, backFaceElement, figura) {
+var Carta = function(rootElement, frontFaceElement, backFaceElement, identificador) {
   this.rootElement = rootElement;
   this.frontFaceElement = frontFaceElement;
   this.backFaceElement = backFaceElement;
-  this.figura = figura;
+  this.virada = false;
+  this.identificador = identificador;
 };
 Carta.prototype.virar = function() {
-  
+  if(!this.virada) {
+    this.virada = true;
+    this.frontFaceElement.classList.add("virado");
+    this.backFaceElement.classList.add("virado");
+  }
+}
+Carta.prototype.desvirar = function() {
+  if(this.virada) {
+    this.virada = false;
+    this.frontFaceElement.classList.remove("virado");
+    this.backFaceElement.classList.remove("virado");
+  }
+}
+Carta.prototype.estaVirada = function() {
+  return this.virada;
+}
+Carta.prototype.removerRealce = function() {
+  this.realcado = false;
+  this.frontFaceElement.classList.remove("acertou");
+}
+Carta.prototype.realcar = function() {
+  this.realcado = true;
+  this.frontFaceElement.classList.add("acertou");
 }
 
 
@@ -37,18 +81,12 @@ var Mesa = {
     Mesa.cartas = [];
     
     for (var i = 0; i < numeroCartas; i++) {
-      var figura = {
-        src: "../img/" + (i % numeroPares) + ".jpg",
-        id: i % (Partida.tamanho)
-      };
+      var identificador = i % (Partida.tamanho * Partida.tamanho / 2);
+      
+      var imgSrc = "../img/cartas/" + identificador + ".jpg";
       
       var rootElement = document.createElement("div");
       rootElement.setAttribute("class", "carta");
-      rootElement.setAttribute("id", "carta" + i);
-
-      rootElement.addEventListener("click", function() {
-        Mesa.virarCarta(this);
-      }, false);
 
       var backElement = document.createElement("div");
       backElement.setAttribute("class", "face Back");
@@ -56,9 +94,18 @@ var Mesa = {
       
       var frontElement = document.createElement("div");
       frontElement.setAttribute("class", "face Front");
+      frontElement.style.backgroundImage = "url('" + imgSrc + "')";
       rootElement.appendChild(frontElement);
       
-      var carta = new Carta(rootElement, frontElement, backElement, figura);
+      var carta = new Carta(rootElement, frontElement, backElement, identificador);
+
+      // Declarando _carta dentro de uma função para manter seu valor em escopo isolado
+      rootElement.addEventListener("click", (function() {
+        var _carta = carta;
+        return function() {
+          Mesa.virarCarta(_carta);
+        };
+      })(), false);
       
       Mesa.cartas.push(carta);
     }
@@ -76,48 +123,53 @@ var Mesa = {
     Mesa.cartas = novoArray;
   },
   
-  virarCarta: function(cartaElement) {
-    if (Mesa.cartasViradas.length < 2) {  //vira duas cartas
-        var faces = cartaElement.getElementsByClassName("face");
-        //console.log(faces[0]); //faceBack
-        if (faces[0].classList.length > 2) {
-            return; //não permite que ao clicar duas vezes na mesma carta, ela desvira
-        }
-        faces[0].classList.toggle("virado"); //procura e desliga a face
-        faces[1].classList.toggle("virado"); //procura e desliga a face
-        Mesa.cartasViradas.push(cartaElement);
+  virarCarta: function(carta) {
+    var estavaVirada = carta.estaVirada();
+    
+    if (Mesa.cartasViradas.length >= 2) {
         
-        if (Mesa.cartasViradas.length === 2) {
-            if (Mesa.cartasViradas[0].childNodes[1].id === Mesa.cartasViradas[1].childNodes[1].id) {  //acertou duas cartas
-                Mesa.cartasViradas[0].childNodes[0].classList.toggle("acertou");
-                Mesa.cartasViradas[0].childNodes[1].classList.toggle("acertou");
-                Mesa.cartasViradas[1].childNodes[0].classList.toggle("acertou");
-                Mesa.cartasViradas[1].childNodes[1].classList.toggle("acertou");
-
-                Partida.jogadores[Partida.jogadorAtual].acertos++;
-                
-                Mesa.cartasViradas = [];
-                
-                var acertos = Partida.jogadores[0].acertos;
-                if(Partida.modoJogo == ModoJogo.GRUPO) {
-                  acertos += Partida.jogadores[1].acertos;
-                }
-                
-                // se acertou todas as cartas
-                if (acertos === Partida.tamanho * Partida.tamanho / 2) {
-                    Partida.gameOver();
-                }
-            }
-            
-            Partida.proximoJogador();
+        for(var c of Mesa.cartasViradas) {
+          c.desvirar();
         }
-    } else {
-        Mesa.cartasViradas[0].childNodes[0].classList.toggle("virado"); //no terceiro clique desvira as cartas viradas
-        Mesa.cartasViradas[0].childNodes[1].classList.toggle("virado");
-        Mesa.cartasViradas[1].childNodes[0].classList.toggle("virado");
-        Mesa.cartasViradas[1].childNodes[1].classList.toggle("virado");
 
         Mesa.cartasViradas = [];
+        
+        if(estavaVirada) {
+          return;
+        }
+    }
+    
+    if(carta.estaVirada()) {
+      return;
+    }
+    
+    carta.virar();
+    
+    Mesa.cartasViradas.push(carta);
+    
+    if (Mesa.cartasViradas.length === 2) {
+      if (Mesa.cartasViradas[0].identificador === Mesa.cartasViradas[1].identificador) {
+          //acertou duas cartas
+          Mesa.cartasViradas[0].realcar();
+          Mesa.cartasViradas[1].realcar();
+
+          Partida.jogadores[Partida.jogadorAtual].acertos++;
+          
+          Mesa.cartasViradas = [];
+          
+          var acertos = 0;
+          for(var jogador of Partida.jogadores) {
+            acertos += jogador.acertos;
+          }
+          
+          
+          // se acertou todas as cartas
+          if (acertos === Mesa.cartas.length / 2) {
+              Partida.gameOver();
+          }
+      }
+      
+      Partida.proximoJogador();
     }
 
   },
@@ -125,11 +177,9 @@ var Mesa = {
   limparMesa: function() {
     Mesa.cartasViradas = [];
     
-    var frontFaces = document.getElementsByClassName("Front");
-    var backFaces = document.getElementsByClassName("Back");
-    for (var i = 0; i < frontFaces.length; i++) {
-        frontFaces[i].classList.remove("virado", "acertou");
-        backFaces[i].classList.remove("virado", "acertou");
+    for (var carta of Mesa.cartas) {
+      carta.desvirar();
+      carta.removerRealce();
     }
   },
   
@@ -139,23 +189,17 @@ var Mesa = {
     
     for (var linha = 0; linha < tamanho; linha++) {
         var linhaElement = document.createElement("div");
+        linhaElement.style.whiteSpace = "nowrap";
         
         for(var coluna = 0; coluna < tamanho; coluna++) {
             var carta = Mesa.cartas[linha * tamanho + coluna];
+            
+            carta.rootElement.style.zoom = 2.5 / tamanho;
             
             linhaElement.appendChild(carta.rootElement);
         }
        
        cartasElement.appendChild(linhaElement);
-    }
-    
-    document.body.appendChild(document.getElementById("tabuleiro"));
-    
-    // muda a frente das cartas por uma imagem
-    var frontFaces = document.getElementsByClassName("Front");
-    for (var i = 0; i < frontFaces.length; i++) {
-        frontFaces[i].style.background = "url('" + Mesa.cartas[i].figura.src + "')";
-        frontFaces[i].setAttribute("id", Mesa.cartas[i].figura.id);
     }
   }
 };
@@ -200,7 +244,7 @@ var Partida = {
       b.style.backgroundColor = "";
     }
     
-    botao.style.backgroundColor = "#0af";
+    botao.style.backgroundColor = "#3cf";
   },
   
   mudarModoJogo: function(modo) {
@@ -214,7 +258,13 @@ var Partida = {
     }
   },
   
-  iniciarJogo: function() {
+  iniciarJogo: function(fullscreen) {
+    if(fullscreen) {
+      var app = document.getElementById("app");
+      var m = app.requestFullScreen || app.webkitRequestFullScreen || app.mozRequestFullScreen;
+      if(m) m.call(app);
+    }
+    
     Partida.jogadores = [];
     
     Partida.jogadores.push(new Jogador(document.getElementById("nome1").value.trim()));
@@ -232,10 +282,7 @@ var Partida = {
       return;
     }
     
-    var inicioJogo = document.querySelector("#inicio");
-    var gameOver = document.querySelector("#GameOver");
-    inicioJogo.style.zIndex = -2; //coloca div inicio atras e tabuleiro na frente
-    gameOver.style.zIndex = -2; //coloca div GameOver atras
+    ControladorTelas.exibirTabuleiro();
     
     Mesa.embaralhar();
     
@@ -245,17 +292,17 @@ var Partida = {
   },
   
   reiniciarJogo: function() {
-    Partida.iniciarJogo();
+    Partida.iniciarJogo(false);
   },
   
   gameOver: function() {
     Partida.state = GameState.NOT_RUNNING;
     
-    var fimJogo = document.querySelector("#GameOver");
-    //var inicioJogo = document.querySelector("#inicio");
-    fimJogo.style.zIndex = 10; //coloca div GameOver na frente 
-    Partida.mostrarResultado(); //seta valores do resultado
-    fimJogo.addEventListener("click", Partida.iniciarJogo, false);
+    setTimeout(function() {
+      ControladorTelas.exibirResultado();
+      
+      Partida.preencherResultado();
+    }, 1500);
   },
   
   proximoJogador: function() {
@@ -271,20 +318,38 @@ var Partida = {
     }
   },
   
-  mostrarResultado: function() {
-    var nomeJgVencedor = document.getElementById("nomeJgVencedor");
-    var nomeJogador = document.getElementById("nome1").value;
-    if (Partida.modoJogo == ModoJogo.GRUPO) {
-      var nomeJogador2 = document.getElementById("nome2").value;
+  preencherResultado: function() {
+    var maiorPontuacao = 0;
+    var jogadorMaiorPontuacao = null;
+    
+    for(var jogador of Partida.jogadores) {
+      if(jogador.acertos >= maiorPontuacao) {
+        maiorPontuacao = jogador.acertos;
+        jogadorMaiorPontuacao = jogador;
+      }
     }
+    
+    var nomeJgVencedor = jogadorMaiorPontuacao.nome;
+    
+    var nomeJogador = Partida.jogadores[0].nome;
+    if (Partida.modoJogo == ModoJogo.GRUPO) {
+      var nomeJogador2 = Partida.jogadores[1].nome;
+    }
+    
     document.getElementById("nomeJgVencedor").value = nomeJogador;
     document.getElementById("dimEscolhida").value = Partida.tamanho + "x" + Partida.tamanho;
     document.getElementById("modoEscolhido").value = Partida.modoJogo == ModoJogo.INDIVIDUAL? "Individual" : "Grupo";
-    document.getElementById("totalPontos").value = "testando";
+    document.getElementById("totalPontos").value = jogadorMaiorPontuacao.acertos;
     document.getElementById("totalTempo").value = "testando";
   }
 
 };
+
+
+window.addEventListener("load", function() {
+  ControladorTelas.exibirInicio();
+});
+
 
 
 

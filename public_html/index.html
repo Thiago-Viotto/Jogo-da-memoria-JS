@@ -2,58 +2,66 @@
 <html lang="pt-br">
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="estilo.css">
         <link href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz" rel="stylesheet">
         <script type="text/javascript" src="javascript.js"></script>
         <title>Jogo da memória</title>
     </head>
     <body>
-        <div id="inicio">
-            <img id="imgBemVindo" src="../img/bemvindo.png" alt="imagem bem vindo">
-            <p class="paragrafo">Escolha a dimensão do tabuleiro</p>
-            <button id="btn2" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
-            <button id="btn3" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
-            <button id="btn4" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>
-            <form>
-                <p class="paragrafo">Escolha o modo de jogo: </p>
-                <p id="Ind">
-                  <input id="radioInd" type="radio" name="modo" value="Individual" onclick="Partida.mudarModoJogo(ModoJogo.INDIVIDUAL);" style="border: 0px; width: 20px; height: 20px;" checked="true"/>
-                  <label for="radioInd">Individual</label>
-                  
-                  <input id="radioGrupo" type="radio" name="modo" value="Em grupo" onclick="Partida.mudarModoJogo(ModoJogo.GRUPO);" style="border: 0px; width: 20px; height: 20px; margin-left: 30px;"/>
-                  <label for="radioGrupo">Em grupo</label>
-                </p>
-                <br>
-                <p class="paragrafo" id="nomeJogador1">Nome do jogador 1: <input type="text" id="nome1"/></p>
-                <br>
-                <p class="paragrafo" id="nomeJogador2" style="visibility: hidden;">Nome do jogador 2: <input type="text" id="nome2"/></p>
-            </form>
-            <button id="btnIniciar" onclick="Partida.iniciarJogo()">Iniciar Jogo</button>
-        </div>
+        <div id="app">
+          <div id="telasContainer">
+            <div id="inicio">
+                <img src="../img/bemvindo.png" alt="imagem bem vindo" style="max-width: 90%; margin-bottom: 15px;">
+                <p class="paragrafo">Escolha a dimensão do tabuleiro</p>
+                <button id="btn2" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
+                <button id="btn3" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
+                <button id="btn4" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>
+                
+                <div style="margin-top: 15px;">
+                    <p class="paragrafo">Escolha o modo de jogo: </p>
+                    
+                    <input id="radioInd" type="radio" name="modo" value="Individual" onclick="Partida.mudarModoJogo(ModoJogo.INDIVIDUAL);" checked="true"/>
+                    <label for="radioInd" style="font-size: 30px; margin-right: 25px;">Individual</label>
+                    
+                    <input id="radioGrupo" type="radio" name="modo" value="Em grupo" onclick="Partida.mudarModoJogo(ModoJogo.GRUPO);"/>
+                    <label for="radioGrupo" style="font-size: 30px;">Em grupo</label>
+                    
+                    <div style="margin-top: 20px;">
+                      <label for="nome1">Nome do jogador 1:</label> <input type="text" id="nome1">
+                    </div>
+                    <div id="nomeJogador2" style="visibility: hidden; margin-top: 15px;">
+                      <label for="nome2">Nome do jogador 2:</label> <input type="text" id="nome2">
+                    </div>
+                </div>
+                <button id="btnIniciar" onclick="Partida.iniciarJogo(true)">Iniciar Jogo</button>
+            </div>
 
-        <div id="tabuleiro">
-            <p id="playerTurn" style="color: white; font-weight: bold;">&nbsp;</p>
-            
-            <div id="cartas"></div>
-            
-            <p id="paragrafoTabuleiro">Escolha a dimensão do tabuleiro: </p>
-            <button id="btn5" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
-            <button id="btn6" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
-            <button id="btn7" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>
-            <button id="btnIniciar2" onclick="Partida.reiniciarJogo()">Iniciar Jogo</button>
+            <div id="tabuleiro">
+                <p id="playerTurn" style="color: white; font-weight: bold; font-size: 28px; margin: 10px;">&nbsp;</p>
+                
+                <div id="cartas"></div>
+                
+                <p>Escolha a dimensão do tabuleiro: </p>
+                <button id="btn5" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
+                <button id="btn6" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
+                <button id="btn7" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>
+                <button id="btnIniciar2" onclick="Partida.reiniciarJogo()">Iniciar Jogo</button>
 
-        </div>
+            </div>
 
-        <div id="GameOver">
-            <img id="imgGameOver" src="../img/gameover.png" alt="imagem gameover">
-            <form>
-                <p class="paragrafo">Nome do jogador vencedor: </p><input id="nomeJgVencedor" type="text" readonly/>
-                <p class="paragrafo">Dimensões do tabuleiro: </p><input id="dimEscolhida" type="text" readonly/>
-                <p class="paragrafo">Modo de jogo: </p><input id="modoEscolhido" type="text" readonly/>
-                <p class="paragrafo">Total de pontos do vencedor: </p><input id="totalPontos" type="text" readonly/>
-                <p class="paragrafo">Total de tempo gasto na partida: </p><input id="totalTempo" type="text" readonly/>
+            <div id="GameOver" onclick="Partida.iniciarJogo(false)">
+                <img id="imgGameOver" src="../img/gameover.png" alt="imagem gameover">
+                <form>
+                    <p class="paragrafo">Nome do jogador vencedor: </p><input id="nomeJgVencedor" type="text" readonly/>
+                    <p class="paragrafo">Dimensões do tabuleiro: </p><input id="dimEscolhida" type="text" readonly/>
+                    <p class="paragrafo">Modo de jogo: </p><input id="modoEscolhido" type="text" readonly/>
+                    <p class="paragrafo">Total de pontos do vencedor: </p><input id="totalPontos" type="text" readonly/>
+                    <p class="paragrafo">Total de tempo gasto na partida: </p><input id="totalTempo" type="text" readonly/>
 
-            </form>
+                </form>
+            </div>
+          </div>
         </div>
     </body>
 </html>
