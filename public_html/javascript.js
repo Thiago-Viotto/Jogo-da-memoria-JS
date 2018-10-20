@@ -233,6 +233,8 @@ var Partida = {
   jogadores: [],
   
   jogadorAtual: 0,
+  tempoInicial: 0,
+  tempoFinal: 0,
   
   selecionarDimensao: function(tamanho, botao) {
     Partida.tamanho = tamanho;
@@ -266,7 +268,7 @@ var Partida = {
     }
     
     Partida.jogadores = [];
-    
+    Partida.tempoInicial = new Date();
     Partida.jogadores.push(new Jogador(document.getElementById("nome1").value.trim()));
     
     if(Partida.modoJogo == ModoJogo.GRUPO) {
@@ -297,6 +299,7 @@ var Partida = {
   
   gameOver: function() {
     Partida.state = GameState.NOT_RUNNING;
+    Partida.tempoFinal = new Date();
     
     setTimeout(function() {
       ControladorTelas.exibirResultado();
@@ -340,7 +343,7 @@ var Partida = {
     document.getElementById("dimEscolhida").value = Partida.tamanho + "x" + Partida.tamanho;
     document.getElementById("modoEscolhido").value = Partida.modoJogo == ModoJogo.INDIVIDUAL? "Individual" : "Grupo";
     document.getElementById("totalPontos").value = jogadorMaiorPontuacao.acertos;
-    document.getElementById("totalTempo").value = "testando";
+    document.getElementById("totalTempo").value = ((Partida.tempoFinal.getTime() - Partida.tempoInicial.getTime()) / 1000).toFixed(2) + " segundos";
   }
 
 };
