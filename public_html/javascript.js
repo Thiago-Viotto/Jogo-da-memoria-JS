@@ -4,7 +4,6 @@ var cartaVirada = [];
 var frontFaces;
 var inicio = 0; //controla inicio do jogo
 var contAcertos = 0;
-var contCliqueInd = 0;
 var recomeca = 0;
 
 /**
