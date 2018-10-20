@@ -9,8 +9,9 @@
     </head>
     <body>
         <div id="app">
+          <div id="telasContainer">
             <div id="inicio">
-                <img id="imgBemVindo" src="../img/bemvindo.png" alt="imagem bem vindo">
+                <img src="../img/bemvindo.png" alt="imagem bem vindo" style="max-width: 90%; margin-bottom: 30px;">
                 <p class="paragrafo">Escolha a dimensão do tabuleiro</p>
                 <button id="btn2" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
                 <button id="btn3" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
@@ -32,22 +33,20 @@
                 <button id="btnIniciar" onclick="Partida.iniciarJogo()">Iniciar Jogo</button>
             </div>
 
-            <div id="mesa">
-              <div id="tabuleiro">
-                  <p id="playerTurn" style="color: white; font-weight: bold;">&nbsp;</p>
-                  
-                  <div id="cartas"></div>
-                  
-                  <p id="paragrafoTabuleiro">Escolha a dimensão do tabuleiro: </p>
-                  <button id="btn5" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
-                  <button id="btn6" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
-                  <button id="btn7" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>
-                  <button id="btnIniciar2" onclick="Partida.reiniciarJogo()">Iniciar Jogo</button>
+            <div id="tabuleiro">
+                <p id="playerTurn" style="color: white; font-weight: bold; font-size: 25px; margin: 10px;">&nbsp;</p>
+                
+                <div id="cartas"></div>
+                
+                <p id="paragrafoTabuleiro">Escolha a dimensão do tabuleiro: </p>
+                <button id="btn5" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
+                <button id="btn6" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
+                <button id="btn7" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>
+                <button id="btnIniciar2" onclick="Partida.reiniciarJogo()">Iniciar Jogo</button>
 
-              </div>
             </div>
 
-            <div id="GameOver">
+            <div id="GameOver" onclick="Partida.iniciarJogo()">
                 <img id="imgGameOver" src="../img/gameover.png" alt="imagem gameover">
                 <form>
                     <p class="paragrafo">Nome do jogador vencedor: </p><input id="nomeJgVencedor" type="text" readonly/>
@@ -58,6 +57,7 @@
 
                 </form>
             </div>
-         </div>
+          </div>
+        </div>
     </body>
 </html>

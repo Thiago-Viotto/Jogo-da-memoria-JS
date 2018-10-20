@@ -5,9 +5,9 @@
 }
 
 body {
-    background-color: #555; 
-    /* background-image: url("..img/fundoDZ.jpg"); */
+    background-color: #555;
     text-align: center;
+    font-family: sans-serif;
 }
 
 p {
@@ -20,26 +20,42 @@ p {
     left: 0;
     width: 100%;
     height: 100%;
-}
-
-#mesa {
     padding: 30px;
+}
+
+#telasContainer {
+    position: relative;
     width: 100%;
     height: 100%;
 }
 
-#tabuleiro{
+#telasContainer > * {
+    position: absolute;
     width: 100%;
     height: 100%;
+    overflow: auto;
     border: 1px solid #111;
     border-radius: 10px;
-    position: relative auto;
-    /* background-color: #A9F5F2; */
-    background: url("../img/fundo roxo.jpg");
-    background-size: 100%;
-    overflow-y: auto;
+    display: none;
 }
 
+#inicio {
+    background: url("../img/fundoDZ.jpg");
+    background-size: cover;
+    z-index: 1;
+}
+
+#tabuleiro {
+    background: url("../img/fundo roxo.jpg");
+    background-size: 100% 100%;
+    z-index: 5;
+}
+
+#GameOver {
+    background-color: rgba(0,0,0,0.5);
+    background-size: 100% 100%;
+    z-index: 10;
+}
 
 #btn2{
     font-size: 50px;
@@ -97,12 +113,6 @@ p {
     text-shadow: 2px 5px #000000;
     font-family: 'Yanone Kaffeesatz', sans-serif;
     text-align: center;
-}
-
-#imgBemVindo{
-    width: 1325px;
-    height: 125px;
-    margin-bottom: 30px;
 }
 
 #nomeJogador1{
@@ -188,34 +198,6 @@ p {
 
 .Front.virado{
     transform: rotateY(0deg);
-}
-
-#GameOver{
-    position: absolute;
-    top: 0;
-    width: 1325px;
-    border: 1px solid #111;
-    border-radius: 10px;
-    margin: 10px;
-    position: relative auto;
-    height: 625px;
-    background-color: rgba(0,0,0,0.5);
-    background-size: 1325px 625px;
-    z-index: -2;  /* controla o nível/produndidade da pilha - coloca div atrás */
-}
-
-#inicio{
-    position: absolute;
-    top: 0;
-    width: 1325px;
-    border: 1px solid #111;
-    border-radius: 10px;
-    margin: 10px;
-    position: relative auto;
-    height: 625px;
-    background: url("../img/fundoDZ.jpg");
-    background-size: 1325px 625px;
-    z-index: 1;  /* controla o nível/produndidade da pilha - coloca div na frente */
 }
 
 

@@ -9,6 +9,27 @@ var ModoJogo = {
 };
 
 /**
+ * Singleton class
+ */
+var ControladorTelas = {
+  exibirInicio: function() {
+    document.getElementById("inicio").style.display = "block";
+    document.getElementById("tabuleiro").style.display = "none";
+    document.getElementById("GameOver").style.display = "none";
+  },
+  exibirTabuleiro: function() {
+    document.getElementById("inicio").style.display = "none";
+    document.getElementById("tabuleiro").style.display = "block";
+    document.getElementById("GameOver").style.display = "none";
+  },
+  exibirResultado: function() {
+    document.getElementById("inicio").style.display = "none";
+    document.getElementById("tabuleiro").style.display = "block";
+    document.getElementById("GameOver").style.display = "block";
+  }
+};
+
+/**
  * Class
  */
 var Carta = function(rootElement, frontFaceElement, backFaceElement, identificador) {
@@ -68,7 +89,6 @@ var Mesa = {
       
       var rootElement = document.createElement("div");
       rootElement.setAttribute("class", "carta");
-      rootElement.setAttribute("id", "carta" + i);
 
       var backElement = document.createElement("div");
       backElement.setAttribute("class", "face Back");
@@ -250,10 +270,7 @@ var Partida = {
       return;
     }
     
-    var inicioJogo = document.querySelector("#inicio");
-    var gameOver = document.querySelector("#GameOver");
-    inicioJogo.style.zIndex = -2; //coloca div inicio atras e tabuleiro na frente
-    gameOver.style.zIndex = -2; //coloca div GameOver atras
+    ControladorTelas.exibirTabuleiro();
     
     Mesa.embaralhar();
     
@@ -269,10 +286,9 @@ var Partida = {
   gameOver: function() {
     Partida.state = GameState.NOT_RUNNING;
     
-    var fimJogo = document.querySelector("#GameOver");
-    fimJogo.style.zIndex = 10; //coloca div GameOver na frente 
-    Partida.mostrarResultado(); //seta valores do resultado
-    fimJogo.addEventListener("click", Partida.iniciarJogo, false);
+    ControladorTelas.exibirResultado();
+    
+    Partida.preencherResultado(); //seta valores do resultado
   },
   
   proximoJogador: function() {
@@ -288,7 +304,7 @@ var Partida = {
     }
   },
   
-  mostrarResultado: function() {
+  preencherResultado: function() {
     var maiorPontuacao = 0;
     var jogadorMaiorPontuacao = null;
     
@@ -314,6 +330,11 @@ var Partida = {
   }
 
 };
+
+
+window.addEventListener("load", function() {
+  ControladorTelas.exibirInicio();
+});
 
 
 
