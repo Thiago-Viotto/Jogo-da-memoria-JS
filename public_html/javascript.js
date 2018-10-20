@@ -37,6 +37,13 @@ function selecionarDimensao(tamanho, botao) {
     tam = tamanho * tamanho;
     dimensaoTabuleiro = tamanho + "x" + tamanho;
     ajustarImagem();
+    
+    var botoes = document.querySelectorAll(".botao-dimensao");
+    for(var b of botoes) {
+      b.style.backgroundColor = "";
+    }
+    
+    botao.style.backgroundColor = "#0af";
 }
 
 function iniciarJogo() {
