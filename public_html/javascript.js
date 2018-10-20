@@ -33,28 +33,10 @@ function verificaModoInd() {
     ehIndividual++; //indentifica qual é a opcao escolhida
 }
 
-//2x2
-function addDiv() {
-    tam = 4;
-    dimensaoTabuleiro = "2x2";
+function selecionarDimensao(tamanho, botao) {
+    tam = tamanho * tamanho;
+    dimensaoTabuleiro = tamanho + "x" + tamanho;
     ajustarImagem();
-    alert("Você escolheu o tabuleiro 2x2");
-}
-
-//4x4
-function addDiv2() {
-    tam = 8;
-    dimensaoTabuleiro = "4x4";
-    ajustarImagem();
-    alert("Você escolheu o tabuleiro 4x4");
-}
-
-//6x6
-function addDiv3() {
-    tam = 12;
-    dimensaoTabuleiro = "6x6";
-    ajustarImagem();
-    alert("Você escolheu o tabuleiro 6x6");
 }
 
 function iniciarJogo() {
