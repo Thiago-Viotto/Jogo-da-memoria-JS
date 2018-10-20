@@ -194,7 +194,7 @@ var Mesa = {
         for(var coluna = 0; coluna < tamanho; coluna++) {
             var carta = Mesa.cartas[linha * tamanho + coluna];
             
-            carta.rootElement.style.zoom = 2.5 / tamanho;
+            carta.rootElement.style.zoom = 2 / (tamanho / 1.4);
             
             linhaElement.appendChild(carta.rootElement);
         }
