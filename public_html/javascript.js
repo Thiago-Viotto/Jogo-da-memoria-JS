@@ -26,25 +26,16 @@ var Partida = {
 
 
 function verificaModoGrupo() {
-    var radioGrupo = document.getElementById("radioGrupo").checked;
-    if (radioGrupo === true) {
-        document.getElementById("nomeJogador1").style.display = "inline";
-        document.getElementById("nomeJogador2").style.display = "inline";
-    }
+    document.getElementById("nomeJogador1").style.display = "inline";
+    document.getElementById("nomeJogador2").style.display = "inline";
     
     Partida.modoJogo = ModoJogo.GRUPO
 }
 
 function verificaModoInd() {
-    var radioInd = document.getElementById("radioInd").checked;
-    if (radioInd === true) {
-        document.getElementById("nomeJogador1").style.display = "inline";
-    }
-    contCliqueInd++;
-    if (contCliqueInd === 1) {
-        document.getElementById("nomeJogador2").style.display = "none";
-        contCliqueInd--;
-    }
+    document.getElementById("nomeJogador1").style.display = "inline";
+    
+    document.getElementById("nomeJogador2").style.display = "none";
     
     Partida.modoJogo = ModoJogo.INDIVIDUAL;
 }
