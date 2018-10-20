@@ -3,13 +3,16 @@ var figuras = [];
 var cartaVirada = [];
 var frontFaces;
 var inicio = 0; //controla inicio do jogo
-var tam = 0; //controla o tamanho do tabuleiro
 var contAcertos = 0;
 var dimensaoTabuleiro;
 var contCliqueInd = 0;
 var ehIndividual = 0;
 var ehGrupo = 0;
 var recomeca = 0;
+
+var Partida = {
+  tamanho: 0
+}
 
 function verificaModoGrupo() {
     var radioGrupo = document.getElementById("radioGrupo").checked;
@@ -34,7 +37,8 @@ function verificaModoInd() {
 }
 
 function selecionarDimensao(tamanho, botao) {
-    tam = tamanho * tamanho;
+    Partida.tamanho = tamanho;
+
     dimensaoTabuleiro = tamanho + "x" + tamanho;
     ajustarImagem();
     
@@ -53,71 +57,74 @@ function iniciarJogo() {
         cartaVirada = [];
         var frontFaces = document.getElementsByClassName("Front");
         var backFaces = document.getElementsByClassName("Back");
-        for (var i = 0; i < tam; i++) {
+        for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
             frontFaces[i].classList.remove("virado", "acertou");
             backFaces[i].classList.remove("virado", "acertou");
         }
     }
-    if (tam > 0) {  //só aparece a div tabuleiro se o usuario definir a dimensao do tabuleiro
-        var inicioJogo = document.querySelector("#inicio");
-        var gameOver = document.querySelector("#GameOver");
-        inicioJogo.style.zIndex = -2; //coloca div inicio atras e tabuleiro na frente
-        gameOver.style.zIndex = -2; //coloca div GameOver atras
-        if (limite === 0) {
-            figuras = embaralhar(figuras);
-            for (var i = 0; i < tam; i++) {
-                var tabuleiro = document.getElementById("tabuleiro");
-                var div = document.createElement("div");
-                div.setAttribute("class", "carta"); //cria uma classe
-                div.setAttribute("id", "carta" + i); //cria uma div com nomes diferentes de acordo com o i
-                div.style.left = i % (tam / 2) === 0 ? 5 + "px" : i % (tam / 2) * 165 + 5 + "px";
-                div.style.top = i < (tam / 2) ? 5 + "px" : 250 + "px";
-
-                div.addEventListener("click", virarCarta, false); //vira a carta quando a carta é clicada          
-
-                var div2 = document.createElement("div");
-                div2.setAttribute("class", "face Back");
-                div.appendChild(div2);
-                var div3 = document.createElement("div");
-                div3.setAttribute("class", "face Front");
-                div.appendChild(div3);
-                tabuleiro.appendChild(div);
-                document.body.appendChild(tabuleiro);
-            }
-        }
-        getCartaFront(); // muda a frente da carta por uma imagem
-        limite = 1;
+    
+    if(Partida.tamanho <= 0) {
+      return;
     }
+    
+    var inicioJogo = document.querySelector("#inicio");
+    var gameOver = document.querySelector("#GameOver");
+    inicioJogo.style.zIndex = -2; //coloca div inicio atras e tabuleiro na frente
+    gameOver.style.zIndex = -2; //coloca div GameOver atras
+    if (limite === 0) {
+        figuras = embaralhar(figuras);
+        for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
+            var tabuleiro = document.getElementById("tabuleiro");
+            var div = document.createElement("div");
+            div.setAttribute("class", "carta"); //cria uma classe
+            div.setAttribute("id", "carta" + i); //cria uma div com nomes diferentes de acordo com o i
+            div.style.left = i % (Partida.tamanho * Partida.tamanho / 2) === 0 ? 5 + "px" : i % (Partida.tamanho * Partida.tamanho / 2) * 165 + 5 + "px";
+            div.style.top = i < (Partida.tamanho * Partida.tamanho / 2) ? 5 + "px" : 250 + "px";
+
+            div.addEventListener("click", virarCarta, false); //vira a carta quando a carta é clicada          
+
+            var div2 = document.createElement("div");
+            div2.setAttribute("class", "face Back");
+            div.appendChild(div2);
+            var div3 = document.createElement("div");
+            div3.setAttribute("class", "face Front");
+            div.appendChild(div3);
+            tabuleiro.appendChild(div);
+            document.body.appendChild(tabuleiro);
+        }
+    }
+    getCartaFront(); // muda a frente da carta por uma imagem
+    limite = 1;
 }
 
 function ajustarImagem() {
-    if (tam === 4) {
-        for (var i = 0; i < tam; i++) {
+    if (Partida.tamanho == 2) {
+        for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
             var figura = {
                 src: "../img/" + i + ".jpg",
-                id: i % (tam / 2)
+                id: i % (Partida.tamanho * Partida.tamanho / 2)
             };
             figuras.push(figura);
             //console.log(figuras);
         }
     }
 
-    if (tam === 8) {
-        for (var i = 0; i < tam; i++) {
+    if (Partida.tamanho == 4) {
+        for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
             var figura = {
                 src: "../img4x4/" + i + ".jpg",
-                id: i % (tam / 2)
+                id: i % (Partida.tamanho * Partida.tamanho / 2)
             };
             figuras.push(figura);
             //console.log(figuras);
         }
     }
 
-    if (tam === 12) {
-        for (var i = 0; i < tam; i++) {
+    if (Partida.tamanho == 6) {
+        for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
             var figura = {
                 src: "../img6x6/" + i + ".jpg",
-                id: i % (tam / 2)
+                id: i % (Partida.tamanho * Partida.tamanho / 2)
             };
             figuras.push(figura);
             //console.log(figuras);
@@ -165,7 +172,7 @@ function virarCarta() {
                 //acertouCarta();
                 contAcertos++;
                 cartaVirada = [];
-                if (contAcertos === tam / 2) {  //se acertou todas as cartas
+                if (contAcertos === Partida.tamanho * Partida.tamanho / 2) {  //se acertou todas as cartas
                     gameOver();
                     recomeca++;
                 }
@@ -209,7 +216,7 @@ function acertouCarta() {
 
 function getCartaFront() {
     frontFaces = document.getElementsByClassName("Front");
-    for (var i = 0; i < tam; i++) {
+    for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
         frontFaces[i].style.background = "url('" + figuras[i].src + "')";
         frontFaces[i].setAttribute("id", figuras[i].id);
     }
