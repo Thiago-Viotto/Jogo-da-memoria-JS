@@ -1,13 +1,45 @@
-body{
+
+
+* {
+    box-sizing: border-box;
+}
+
+body {
     background-color: #555; 
     /* background-image: url("..img/fundoDZ.jpg"); */
     text-align: center;
 }
 
-*{
+p {
     margin: 0;
-    padding: 0;
 }
+
+#app {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#mesa {
+    padding: 30px;
+    width: 100%;
+    height: 100%;
+}
+
+#tabuleiro{
+    width: 100%;
+    height: 100%;
+    border: 1px solid #111;
+    border-radius: 10px;
+    position: relative auto;
+    /* background-color: #A9F5F2; */
+    background: url("../img/fundo roxo.jpg");
+    background-size: 100%;
+    overflow-y: auto;
+}
+
 
 #btn2{
     font-size: 50px;
@@ -57,17 +89,6 @@ body{
     margin-top: 20px;
 }
 
-#tabuleiro{
-    width: 1325px;
-    height: 625px;
-    border: 1px solid #111;
-    border-radius: 10px;
-    margin: 10px;
-    position: relative auto;
-    /* background-color: #A9F5F2; */
-    background: url("../img/fundo roxo.jpg");
-    background-size: 1325px 625px;
-}
 
 .paragrafo{
     color: #FFFFFF;
@@ -196,3 +217,27 @@ body{
     background-size: 1325px 625px;
     z-index: 1;  /* controla o nível/produndidade da pilha - coloca div na frente */
 }
+
+
+::-webkit-scrollbar {
+    width: 25px;
+    height: 25px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.8);*/ 
+    -webkit-border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    background: #555;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+

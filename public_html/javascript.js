@@ -175,8 +175,6 @@ var Mesa = {
        
        cartasElement.appendChild(linhaElement);
     }
-    
-    document.body.appendChild(document.getElementById("tabuleiro"));
   }
 };
 
