@@ -37,6 +37,7 @@ var Carta = function(rootElement, frontFaceElement, backFaceElement, identificad
   this.frontFaceElement = frontFaceElement;
   this.backFaceElement = backFaceElement;
   this.virada = false;
+  this.exibida = false;
   this.identificador = identificador;
 };
 Carta.prototype.virar = function() {
@@ -46,9 +47,23 @@ Carta.prototype.virar = function() {
     this.backFaceElement.classList.add("virado");
   }
 }
+Carta.prototype.exibir = function() {
+  if(!this.virada) {
+    this.exibida = true;
+    this.frontFaceElement.classList.add("virado");
+    this.backFaceElement.classList.add("virado");
+  }
+}
 Carta.prototype.desvirar = function() {
   if(this.virada) {
     this.virada = false;
+    this.frontFaceElement.classList.remove("virado");
+    this.backFaceElement.classList.remove("virado");
+  }
+}
+Carta.prototype.ocultar = function() {
+  if(this.exibida) {
+    this.exibida = false;
     this.frontFaceElement.classList.remove("virado");
     this.backFaceElement.classList.remove("virado");
   }
@@ -123,6 +138,18 @@ var Mesa = {
     Mesa.cartas = novoArray;
   },
   
+  exibirCartasOcultas: function() {
+    for(var c of Mesa.cartas) {
+      c.exibir();
+    }  
+  },
+
+  ocultarCartasExibidas: function() {
+    for(var c of Mesa.cartas) {
+      c.ocultar();
+    }  
+  },
+
   virarCarta: function(carta) {
     var estavaVirada = carta.estaVirada();
     
