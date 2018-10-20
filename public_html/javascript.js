@@ -95,13 +95,14 @@ var Partida = {
   iniciarJogo: function() {
     Partida.jogadores = [];
     
-    Partida.jogadores.push(new Jogador(document.getElementById("nome1").value));
+    Partida.jogadores.push(new Jogador(document.getElementById("nome1").value.trim()));
     
     if(Partida.modoJogo == ModoJogo.GRUPO) {
-      Partida.jogadores.push(new Jogador(document.getElementById("nome2").value));
+      Partida.jogadores.push(new Jogador(document.getElementById("nome2").value.trim()));
     }
     
-    Partida.jogadorAtual = 0;
+    Partida.jogadorAtual = -1;
+    Partida.proximoJogador();
     
     if (recomeca > 0) {
         Mesa.embaralhar();
@@ -173,7 +174,14 @@ var Partida = {
   proximoJogador: function() {
     Partida.jogadorAtual++;
     Partida.jogadorAtual = Partida.jogadorAtual % Partida.jogadores.length;
-    console.log("Vez do jogador " + (Partida.jogadorAtual + 1) + ":", Partida.jogadores[Partida.jogadorAtual]);
+    
+    var nome = Partida.jogadores[Partida.jogadorAtual].nome;
+    
+    document.getElementById("playerTurn").innerHTML = "&nbsp;";
+    
+    if(Partida.jogadores.length > 1) {
+      document.getElementById("playerTurn").innerText = "Vez do jogador " + (Partida.jogadorAtual + 1) + (nome.length > 0? nome: "");
+    }
   }
 
 };
