@@ -1,8 +1,6 @@
-var limite = 0, opcao = 0;
-var figuras = [];
+var limite = 0;
 var cartaVirada = [];
 var frontFaces;
-var inicio = 0; //controla inicio do jogo
 var contAcertos = 0;
 var recomeca = 0;
 
@@ -51,11 +49,22 @@ var Mesa = {
 
 
 /**
+ * Class
+ */
+var Jogador = function(nome) {
+  this.nome = nome;
+  this.acertos = 0;
+}
+
+
+/**
  * Singleton class
  */
 var Partida = {
   tamanho: 0,
   modoJogo: ModoJogo.INDIVIDUAL,
+  
+  jogadores: [],
   
   selecionarDimensao: function(tamanho, botao) {
     Partida.tamanho = tamanho;
@@ -82,6 +91,14 @@ var Partida = {
   },
   
   iniciarJogo: function() {
+    Partida.jogadores = [];
+    
+    Partida.jogadores.push(new Jogador(document.getElementById("nome1").value));
+    
+    if(Partida.modoJogo == ModoJogo.GRUPO) {
+      Partida.jogadores.push(new Jogador(document.getElementById("nome2").value));
+    }
+    
     if (recomeca > 0) {
         Mesa.embaralhar();
         contAcertos = 0;
@@ -102,6 +119,7 @@ var Partida = {
     var gameOver = document.querySelector("#GameOver");
     inicioJogo.style.zIndex = -2; //coloca div inicio atras e tabuleiro na frente
     gameOver.style.zIndex = -2; //coloca div GameOver atras
+    
     if (limite === 0) {
         Mesa.embaralhar();
         
@@ -139,6 +157,14 @@ var Partida = {
   
   reiniciarJogo: function() {
     Partida.iniciarJogo();
+  },
+  
+  gameOver: function() {
+    var fimJogo = document.querySelector("#GameOver");
+    //var inicioJogo = document.querySelector("#inicio");
+    fimJogo.style.zIndex = 10; //coloca div GameOver na frente 
+    acertouCarta(); //seta valores do resultado
+    fimJogo.addEventListener("click", iniciarJogo, false);
   }
 
 };
@@ -167,8 +193,9 @@ function virarCarta() {
                 //acertouCarta();
                 contAcertos++;
                 cartaVirada = [];
-                if (contAcertos === Partida.tamanho * Partida.tamanho / 2) {  //se acertou todas as cartas
-                    gameOver();
+                // se acertou todas as cartas
+                if (contAcertos === Partida.tamanho * Partida.tamanho / 2) {
+                    Partida.gameOver();
                     recomeca++;
                 }
 
@@ -184,14 +211,6 @@ function virarCarta() {
         cartaVirada = [];
     }
 
-}
-
-function gameOver() {
-    var fimJogo = document.querySelector("#GameOver");
-    //var inicioJogo = document.querySelector("#inicio");
-    fimJogo.style.zIndex = 10; //coloca div GameOver na frente 
-    acertouCarta(); //seta valores do resultado
-    fimJogo.addEventListener("click", iniciarJogo, false);
 }
 
 function acertouCarta() {
