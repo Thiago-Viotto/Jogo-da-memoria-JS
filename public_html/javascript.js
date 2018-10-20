@@ -18,49 +18,34 @@ var ModoJogo = {
  * Singleton class
  */
 var Mesa = {
+  cartas: [],
+  
   preencherMesa: function(tamanho) {
     var numeroCartas = tamanho * tamanho;
     var numeroPares = tamanho * 2;
     
-    if (tamanho == 2) {
-        figuras = [];
-        
-        for (var i = 0; i < numeroCartas; i++) {
-            
-            var figura = {
-                src: "../img/" + (i % numeroPares) + ".jpg",
-                id: i % (Partida.tamanho)
-            };
-            
-            figuras.push(figura);
+    Mesa.cartas = [];
+    
+    for (var i = 0; i < numeroCartas; i++) {
+      var figura = {
+        src: "../img/" + (i % numeroPares) + ".jpg",
+        id: i % (Partida.tamanho)
+      };
+      
+      Mesa.cartas.push(figura);
+    }
+  },
+  
+  embaralhar: function() {
+    var novoArray = [];
+    while (novoArray.length !== Mesa.cartas.length) {
+        var d = Math.floor(Math.random() * Mesa.cartas.length);
+        if (novoArray.indexOf(Mesa.cartas[d]) < 0) {
+            novoArray.push(Mesa.cartas[d]);
         }
     }
 
-    if (tamanho == 4) {
-        figuras = [];
-        
-        for (var i = 0; i < numeroCartas; i++) {
-            var figura = {
-                src: "../img4x4/" + (i % numeroPares) + ".jpg",
-                id: i % (Partida.tamanho)
-            };
-            
-            figuras.push(figura);
-        }
-    }
-
-    if (tamanho == 6) {
-        figuras = [];
-        
-        for (var i = 0; i < numeroCartas; i++) {
-            var figura = {
-                src: "../img6x6/" + (i % numeroPares) + ".jpg",
-                id: i % (Partida.tamanho)
-            };
-            figuras.push(figura);
-            //console.log(figuras);
-        }
-    }
+    Mesa.cartas = novoArray;
   }
 };
 
@@ -94,14 +79,11 @@ var Partida = {
     else {
       document.getElementById("nomeJogador2").style.visibility = "hidden";
     }
-  }
-};
-
-
-
-function iniciarJogo() {
+  },
+  
+  iniciarJogo: function() {
     if (recomeca > 0) {
-        figuras = embaralhar(figuras);
+        Mesa.embaralhar();
         contAcertos = 0;
         cartaVirada = [];
         var frontFaces = document.getElementsByClassName("Front");
@@ -121,7 +103,7 @@ function iniciarJogo() {
     inicioJogo.style.zIndex = -2; //coloca div inicio atras e tabuleiro na frente
     gameOver.style.zIndex = -2; //coloca div GameOver atras
     if (limite === 0) {
-        figuras = embaralhar(figuras);
+        Mesa.embaralhar();
         
         var tabuleiro = document.getElementById("tabuleiro");
         
@@ -153,26 +135,16 @@ function iniciarJogo() {
     }
     getCartaFront(); // muda a frente da carta por uma imagem
     limite = 1;
-}
+  },
+  
+  reiniciarJogo: function() {
+    Partida.iniciarJogo();
+  }
+
+};
 
 
-/* 1- Criar um array vazio
- * 2- Verificar o número de elementos do array
- * 3- Criar um índice com valor aleatório
- * 4- Avaliar se elemento existe no array novo
- * 5- Inserir o elemento no array novo
- */
-function embaralhar(arrayVelho) {
-    var novoArray = [];  //array vazio
-    while (novoArray.length !== arrayVelho.length) { //verifica o número de elementos do array
-        var d = Math.floor(Math.random() * arrayVelho.length); //gera valores aleatórios entre 0 e 10
-        if (novoArray.indexOf(arrayVelho[d]) < 0) { //se não existir elemento no array
-            novoArray.push(arrayVelho[d]); // preenche o novo Array
-        }
-    }
 
-    return novoArray;
-}
 
 function virarCarta() {
     if (cartaVirada.length < 2) {  //vira duas cartas
@@ -219,7 +191,6 @@ function gameOver() {
     //var inicioJogo = document.querySelector("#inicio");
     fimJogo.style.zIndex = 10; //coloca div GameOver na frente 
     acertouCarta(); //seta valores do resultado
-    console.log(figuras);
     fimJogo.addEventListener("click", iniciarJogo, false);
 }
 
@@ -240,8 +211,8 @@ function acertouCarta() {
 function getCartaFront() {
     frontFaces = document.getElementsByClassName("Front");
     for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
-        frontFaces[i].style.background = "url('" + figuras[i].src + "')";
-        frontFaces[i].setAttribute("id", figuras[i].id);
+        frontFaces[i].style.background = "url('" + Mesa.cartas[i].src + "')";
+        frontFaces[i].setAttribute("id", Mesa.cartas[i].id);
     }
 }
 

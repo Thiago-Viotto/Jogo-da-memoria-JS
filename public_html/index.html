@@ -28,7 +28,7 @@
                 <br>
                 <p class="paragrafo" id="nomeJogador2" style="visibility: hidden;">Nome do jogador 2: <input type="text" id="nome2"/></p>
             </form>
-            <button id="btnIniciar" onclick="iniciarJogo()">Iniciar Jogo</button>
+            <button id="btnIniciar" onclick="Partida.iniciarJogo()">Iniciar Jogo</button>
         </div>
 
         <div id="tabuleiro">
@@ -36,7 +36,7 @@
             <button id="btn5" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
             <button id="btn6" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
             <button id="btn7" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>
-            <button id="btnIniciar2" onclick="reiniciarJogo()">Iniciar Jogo</button>
+            <button id="btnIniciar2" onclick="Partida.reiniciarJogo()">Iniciar Jogo</button>
 
         </div>
 
