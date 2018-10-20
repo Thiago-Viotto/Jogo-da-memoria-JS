@@ -180,7 +180,7 @@ var Partida = {
     document.getElementById("playerTurn").innerHTML = "&nbsp;";
     
     if(Partida.jogadores.length > 1) {
-      document.getElementById("playerTurn").innerText = "Vez do jogador " + (Partida.jogadorAtual + 1) + (nome.length > 0? nome: "");
+      document.getElementById("playerTurn").innerText = "Vez do jogador " + (Partida.jogadorAtual + 1) + (nome.length > 0? ": " + nome: "");
     }
   }
 
