@@ -1,5 +1,4 @@
-var cartaVirada = [];
-var frontFaces;
+
 
 /**
  * Enum
@@ -14,6 +13,8 @@ var ModoJogo = {
  */
 var Mesa = {
   cartas: [],
+  
+  cartasViradas: [],
   
   preencherMesa: function(tamanho) {
     var numeroCartas = tamanho * tamanho;
@@ -44,7 +45,7 @@ var Mesa = {
   },
   
   virarCarta: function(cartaElement) {
-    if (cartaVirada.length < 2) {  //vira duas cartas
+    if (Mesa.cartasViradas.length < 2) {  //vira duas cartas
         var faces = cartaElement.getElementsByClassName("face");
         //console.log(faces[0]); //faceBack
         if (faces[0].classList.length > 2) {
@@ -52,18 +53,18 @@ var Mesa = {
         }
         faces[0].classList.toggle("virado"); //procura e desliga a face
         faces[1].classList.toggle("virado"); //procura e desliga a face
-        cartaVirada.push(cartaElement);
+        Mesa.cartasViradas.push(cartaElement);
         
-        if (cartaVirada.length === 2) {
-            if (cartaVirada[0].childNodes[1].id === cartaVirada[1].childNodes[1].id) {  //acertou duas cartas
-                cartaVirada[0].childNodes[0].classList.toggle("acertou");
-                cartaVirada[0].childNodes[1].classList.toggle("acertou");
-                cartaVirada[1].childNodes[0].classList.toggle("acertou");
-                cartaVirada[1].childNodes[1].classList.toggle("acertou");
+        if (Mesa.cartasViradas.length === 2) {
+            if (Mesa.cartasViradas[0].childNodes[1].id === Mesa.cartasViradas[1].childNodes[1].id) {  //acertou duas cartas
+                Mesa.cartasViradas[0].childNodes[0].classList.toggle("acertou");
+                Mesa.cartasViradas[0].childNodes[1].classList.toggle("acertou");
+                Mesa.cartasViradas[1].childNodes[0].classList.toggle("acertou");
+                Mesa.cartasViradas[1].childNodes[1].classList.toggle("acertou");
 
                 Partida.jogadores[Partida.jogadorAtual].acertos++;
                 
-                cartaVirada = [];
+                Mesa.cartasViradas = [];
                 
                 var acertos = Partida.jogadores[0].acertos;
                 if(Partida.modoJogo == ModoJogo.GRUPO) {
@@ -79,15 +80,64 @@ var Mesa = {
             Partida.proximoJogador();
         }
     } else {
-        //console.log(cartaVirada);
-        cartaVirada[0].childNodes[0].classList.toggle("virado"); //no terceiro clique desvira as cartas viradas
-        cartaVirada[0].childNodes[1].classList.toggle("virado");
-        cartaVirada[1].childNodes[0].classList.toggle("virado");
-        cartaVirada[1].childNodes[1].classList.toggle("virado");
+        Mesa.cartasViradas[0].childNodes[0].classList.toggle("virado"); //no terceiro clique desvira as cartas viradas
+        Mesa.cartasViradas[0].childNodes[1].classList.toggle("virado");
+        Mesa.cartasViradas[1].childNodes[0].classList.toggle("virado");
+        Mesa.cartasViradas[1].childNodes[1].classList.toggle("virado");
 
-        cartaVirada = [];
+        Mesa.cartasViradas = [];
     }
 
+  },
+  
+  limparMesa: function() {
+    Mesa.cartasViradas = [];
+    
+    var frontFaces = document.getElementsByClassName("Front");
+    var backFaces = document.getElementsByClassName("Back");
+    for (var i = 0; i < frontFaces.length; i++) {
+        frontFaces[i].classList.remove("virado", "acertou");
+        backFaces[i].classList.remove("virado", "acertou");
+    }
+  },
+  
+  gerarCartas: function(tamanho) {
+    var cartasElement = document.getElementById("cartas");
+    cartasElement.innerHTML = "";
+    
+    for (var linha = 0; linha < tamanho; linha++) {
+        var linhaElement = document.createElement("div");
+        
+        for(var coluna = 0; coluna < tamanho; coluna++) {
+            var div = document.createElement("div");
+            div.setAttribute("class", "carta");
+            div.setAttribute("id", "carta" + linha);
+
+            div.addEventListener("click", function() {
+              Mesa.virarCarta(this);
+            }, false);
+
+            var div2 = document.createElement("div");
+            div2.setAttribute("class", "face Back");
+            div.appendChild(div2);
+            var div3 = document.createElement("div");
+            div3.setAttribute("class", "face Front");
+            div.appendChild(div3);
+            
+            linhaElement.appendChild(div);
+        }
+       
+       cartasElement.appendChild(linhaElement);
+    }
+    
+    document.body.appendChild(document.getElementById("tabuleiro"));
+    
+    // muda a frente das cartas por uma imagem
+    var frontFaces = document.getElementsByClassName("Front");
+    for (var i = 0; i < frontFaces.length; i++) {
+        frontFaces[i].style.background = "url('" + Mesa.cartas[i].src + "')";
+        frontFaces[i].setAttribute("id", Mesa.cartas[i].id);
+    }
   }
 };
 
@@ -157,13 +207,7 @@ var Partida = {
     Partida.jogadorAtual = -1;
     Partida.proximoJogador();
     
-    cartaVirada = [];
-    var frontFaces = document.getElementsByClassName("Front");
-    var backFaces = document.getElementsByClassName("Back");
-    for (var i = 0; i < frontFaces.length; i++) {
-        frontFaces[i].classList.remove("virado", "acertou");
-        backFaces[i].classList.remove("virado", "acertou");
-    }
+    Mesa.limparMesa();
     
     if(Partida.tamanho <= 0) {
       return;
@@ -176,37 +220,7 @@ var Partida = {
     
     Mesa.embaralhar();
     
-    var cartasElement = document.getElementById("cartas");
-    cartasElement.innerHTML = "";
-    
-    for (var linha = 0; linha < Partida.tamanho; linha++) {
-        var linhaElement = document.createElement("div");
-        
-        for(var coluna = 0; coluna < Partida.tamanho; coluna++) {
-            var div = document.createElement("div");
-            div.setAttribute("class", "carta");
-            div.setAttribute("id", "carta" + linha);
-
-            div.addEventListener("click", function() {
-              Mesa.virarCarta(this);
-            }, false);
-
-            var div2 = document.createElement("div");
-            div2.setAttribute("class", "face Back");
-            div.appendChild(div2);
-            var div3 = document.createElement("div");
-            div3.setAttribute("class", "face Front");
-            div.appendChild(div3);
-            
-            linhaElement.appendChild(div);
-        }
-       
-       cartasElement.appendChild(linhaElement);
-    }
-    
-    document.body.appendChild(document.getElementById("tabuleiro"));
-    
-    getCartaFront(); // muda a frente da carta por uma imagem
+    Mesa.gerarCartas(Partida.tamanho);
   },
   
   reiniciarJogo: function() {
@@ -250,12 +264,4 @@ var Partida = {
 };
 
 
-
-function getCartaFront() {
-    frontFaces = document.getElementsByClassName("Front");
-    for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
-        frontFaces[i].style.background = "url('" + Mesa.cartas[i].src + "')";
-        frontFaces[i].setAttribute("id", Mesa.cartas[i].id);
-    }
-}
 
