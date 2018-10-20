@@ -4,7 +4,6 @@ var cartaVirada = [];
 var frontFaces;
 var inicio = 0; //controla inicio do jogo
 var contAcertos = 0;
-var dimensaoTabuleiro;
 var contCliqueInd = 0;
 var ehIndividual = 0;
 var ehGrupo = 0;
@@ -38,8 +37,7 @@ function verificaModoInd() {
 
 function selecionarDimensao(tamanho, botao) {
     Partida.tamanho = tamanho;
-
-    dimensaoTabuleiro = tamanho + "x" + tamanho;
+    
     ajustarImagem();
     
     var botoes = document.querySelectorAll(".botao-dimensao");
@@ -207,7 +205,7 @@ function acertouCarta() {
         var nomeJogador2 = document.getElementById("nomeJogador2").value;
     }
     document.getElementById("nomeJgVencedor").value = nomeJogador;
-    document.getElementById("dimEscolhida").value = dimensaoTabuleiro;
+    document.getElementById("dimEscolhida").value = Partida.tamanho + "x" + Partida.tamanho;
     document.getElementById("modoEscolhido").value = "Individual";
     document.getElementById("totalPontos").value = "testando";
     document.getElementById("totalTempo").value = "testando";
