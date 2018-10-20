@@ -9,6 +9,20 @@ var ModoJogo = {
 };
 
 /**
+ * Class
+ */
+var Carta = function(rootElement, frontFaceElement, backFaceElement, figura) {
+  this.rootElement = rootElement;
+  this.frontFaceElement = frontFaceElement;
+  this.backFaceElement = backFaceElement;
+  this.figura = figura;
+};
+Carta.prototype.virar = function() {
+  
+}
+
+
+/**
  * Singleton class
  */
 var Mesa = {
@@ -28,7 +42,25 @@ var Mesa = {
         id: i % (Partida.tamanho)
       };
       
-      Mesa.cartas.push(figura);
+      var rootElement = document.createElement("div");
+      rootElement.setAttribute("class", "carta");
+      rootElement.setAttribute("id", "carta" + i);
+
+      rootElement.addEventListener("click", function() {
+        Mesa.virarCarta(this);
+      }, false);
+
+      var backElement = document.createElement("div");
+      backElement.setAttribute("class", "face Back");
+      rootElement.appendChild(backElement);
+      
+      var frontElement = document.createElement("div");
+      frontElement.setAttribute("class", "face Front");
+      rootElement.appendChild(frontElement);
+      
+      var carta = new Carta(rootElement, frontElement, backElement, figura);
+      
+      Mesa.cartas.push(carta);
     }
   },
   
@@ -109,22 +141,9 @@ var Mesa = {
         var linhaElement = document.createElement("div");
         
         for(var coluna = 0; coluna < tamanho; coluna++) {
-            var div = document.createElement("div");
-            div.setAttribute("class", "carta");
-            div.setAttribute("id", "carta" + linha);
-
-            div.addEventListener("click", function() {
-              Mesa.virarCarta(this);
-            }, false);
-
-            var div2 = document.createElement("div");
-            div2.setAttribute("class", "face Back");
-            div.appendChild(div2);
-            var div3 = document.createElement("div");
-            div3.setAttribute("class", "face Front");
-            div.appendChild(div3);
+            var carta = Mesa.cartas[linha * tamanho + coluna];
             
-            linhaElement.appendChild(div);
+            linhaElement.appendChild(carta.rootElement);
         }
        
        cartasElement.appendChild(linhaElement);
@@ -135,8 +154,8 @@ var Mesa = {
     // muda a frente das cartas por uma imagem
     var frontFaces = document.getElementsByClassName("Front");
     for (var i = 0; i < frontFaces.length; i++) {
-        frontFaces[i].style.background = "url('" + Mesa.cartas[i].src + "')";
-        frontFaces[i].setAttribute("id", Mesa.cartas[i].id);
+        frontFaces[i].style.background = "url('" + Mesa.cartas[i].figura.src + "')";
+        frontFaces[i].setAttribute("id", Mesa.cartas[i].figura.id);
     }
   }
 };
@@ -221,6 +240,8 @@ var Partida = {
     Mesa.embaralhar();
     
     Mesa.gerarCartas(Partida.tamanho);
+    
+    Partida.state = GameState.RUNNING;
   },
   
   reiniciarJogo: function() {
@@ -228,6 +249,8 @@ var Partida = {
   },
   
   gameOver: function() {
+    Partida.state = GameState.NOT_RUNNING;
+    
     var fimJogo = document.querySelector("#GameOver");
     //var inicioJogo = document.querySelector("#inicio");
     fimJogo.style.zIndex = 10; //coloca div GameOver na frente 
