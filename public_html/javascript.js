@@ -42,18 +42,15 @@ var Carta = function(rootElement, frontFaceElement, backFaceElement, identificad
 Carta.prototype.virar = function() {
   if(!this.virada) {
     this.virada = true;
-    
-    var faces = this.rootElement.getElementsByClassName("face");
-    
-    faces[0].classList.toggle("virado"); //procura e desliga a face
-    faces[1].classList.toggle("virado"); //procura e desliga a face
+    this.frontFaceElement.classList.add("virado");
+    this.backFaceElement.classList.add("virado");
   }
 }
 Carta.prototype.desvirar = function() {
   if(this.virada) {
     this.virada = false;
-    this.frontFaceElement.classList.toggle("virado");
-    this.backFaceElement.classList.toggle("virado");
+    this.frontFaceElement.classList.remove("virado");
+    this.backFaceElement.classList.remove("virado");
   }
 }
 Carta.prototype.estaVirada = function() {
@@ -84,8 +81,9 @@ var Mesa = {
     Mesa.cartas = [];
     
     for (var i = 0; i < numeroCartas; i++) {
-      var imgSrc = "../img/" + (i % numeroPares) + ".jpg";
       var identificador = i % (Partida.tamanho * Partida.tamanho / 2);
+      
+      var imgSrc = "../img/cartas/" + identificador + ".jpg";
       
       var rootElement = document.createElement("div");
       rootElement.setAttribute("class", "carta");
@@ -96,7 +94,7 @@ var Mesa = {
       
       var frontElement = document.createElement("div");
       frontElement.setAttribute("class", "face Front");
-      frontElement.style.background = "url('" + imgSrc + "')";
+      frontElement.style.backgroundImage = "url('" + imgSrc + "')";
       rootElement.appendChild(frontElement);
       
       var carta = new Carta(rootElement, frontElement, backElement, identificador);
@@ -126,14 +124,19 @@ var Mesa = {
   },
   
   virarCarta: function(carta) {
-    if (Mesa.cartasViradas.length >= 2) {  //vira duas cartas
-        for(var carta of Mesa.cartasViradas) {
-          carta.desvirar();
+    var estavaVirada = carta.estaVirada();
+    
+    if (Mesa.cartasViradas.length >= 2) {
+        
+        for(var c of Mesa.cartasViradas) {
+          c.desvirar();
         }
 
         Mesa.cartasViradas = [];
         
-        return;
+        if(estavaVirada) {
+          return;
+        }
     }
     
     if(carta.estaVirada()) {
@@ -186,9 +189,12 @@ var Mesa = {
     
     for (var linha = 0; linha < tamanho; linha++) {
         var linhaElement = document.createElement("div");
+        linhaElement.style.whiteSpace = "nowrap";
         
         for(var coluna = 0; coluna < tamanho; coluna++) {
             var carta = Mesa.cartas[linha * tamanho + coluna];
+            
+            carta.rootElement.style.zoom = 2.5 / tamanho;
             
             linhaElement.appendChild(carta.rootElement);
         }
@@ -333,7 +339,7 @@ var Partida = {
     document.getElementById("nomeJgVencedor").value = nomeJogador;
     document.getElementById("dimEscolhida").value = Partida.tamanho + "x" + Partida.tamanho;
     document.getElementById("modoEscolhido").value = Partida.modoJogo == ModoJogo.INDIVIDUAL? "Individual" : "Grupo";
-    document.getElementById("totalPontos").value = "testando";
+    document.getElementById("totalPontos").value = jogadorMaiorPontuacao.acertos;
     document.getElementById("totalTempo").value = "testando";
   }
 
