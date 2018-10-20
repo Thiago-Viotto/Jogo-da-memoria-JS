@@ -177,7 +177,7 @@ input[type=radio] {
 
 .Front{
     transform: rotateY(-180deg);
-    background-size: cover;
+    background-size: 100% 100%;
 }
 
 .Front.virado{
