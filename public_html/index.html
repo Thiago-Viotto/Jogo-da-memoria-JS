@@ -34,7 +34,7 @@
                       <label for="nome2">Nome do jogador 2:</label> <input type="text" id="nome2">
                     </div>
                 </div>
-                <button id="btnIniciar" onclick="Partida.iniciarJogo()">Iniciar Jogo</button>
+                <button id="btnIniciar" onclick="Partida.iniciarJogo(true)">Iniciar Jogo</button>
             </div>
 
             <div id="tabuleiro">
@@ -50,7 +50,7 @@
 
             </div>
 
-            <div id="GameOver" onclick="Partida.iniciarJogo()">
+            <div id="GameOver" onclick="Partida.iniciarJogo(false)">
                 <img id="imgGameOver" src="../img/gameover.png" alt="imagem gameover">
                 <form>
                     <p class="paragrafo">Nome do jogador vencedor: </p><input id="nomeJgVencedor" type="text" readonly/>

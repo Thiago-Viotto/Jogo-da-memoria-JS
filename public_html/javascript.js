@@ -252,7 +252,13 @@ var Partida = {
     }
   },
   
-  iniciarJogo: function() {
+  iniciarJogo: function(fullscreen) {
+    if(fullscreen) {
+      var app = document.getElementById("app");
+      var m = app.requestFullScreen || app.webkitRequestFullScreen || app.mozRequestFullScreen;
+      if(m) m.call(app);
+    }
+    
     Partida.jogadores = [];
     
     Partida.jogadores.push(new Jogador(document.getElementById("nome1").value.trim()));
@@ -280,15 +286,17 @@ var Partida = {
   },
   
   reiniciarJogo: function() {
-    Partida.iniciarJogo();
+    Partida.iniciarJogo(false);
   },
   
   gameOver: function() {
     Partida.state = GameState.NOT_RUNNING;
     
-    ControladorTelas.exibirResultado();
-    
-    Partida.preencherResultado(); //seta valores do resultado
+    setTimeout(function() {
+      ControladorTelas.exibirResultado();
+      
+      Partida.preencherResultado();
+    }, 1500);
   },
   
   proximoJogador: function() {
@@ -335,6 +343,7 @@ var Partida = {
 window.addEventListener("load", function() {
   ControladorTelas.exibirInicio();
 });
+
 
 
 
