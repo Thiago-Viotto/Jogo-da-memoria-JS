@@ -5,13 +5,25 @@ var frontFaces;
 var inicio = 0; //controla inicio do jogo
 var contAcertos = 0;
 var contCliqueInd = 0;
-var ehIndividual = 0;
-var ehGrupo = 0;
 var recomeca = 0;
 
+/**
+ * Enum
+ */
+var ModoJogo = {
+  INDIVIDUAL: 0,
+  GRUPO: 1
+};
+
+
+/**
+ * Singleton class
+ */
 var Partida = {
-  tamanho: 0
-}
+  tamanho: 0,
+  modoJogo: ModoJogo.INDIVIDUAL
+};
+
 
 function verificaModoGrupo() {
     var radioGrupo = document.getElementById("radioGrupo").checked;
@@ -19,7 +31,8 @@ function verificaModoGrupo() {
         document.getElementById("nomeJogador1").style.display = "inline";
         document.getElementById("nomeJogador2").style.display = "inline";
     }
-    ehGrupo++; //indentifica qual é a opcao escolhida
+    
+    Partida.modoJogo = ModoJogo.GRUPO
 }
 
 function verificaModoInd() {
@@ -32,7 +45,8 @@ function verificaModoInd() {
         document.getElementById("nomeJogador2").style.display = "none";
         contCliqueInd--;
     }
-    ehIndividual++; //indentifica qual é a opcao escolhida
+    
+    Partida.modoJogo = ModoJogo.INDIVIDUAL;
 }
 
 function selecionarDimensao(tamanho, botao) {
@@ -201,7 +215,7 @@ function gameOver() {
 function acertouCarta() {
     var nomeJgVencedor = document.getElementById("nomeJgVencedor");
     var nomeJogador = document.getElementById("nomeJogador1").value;
-    if (ehGrupo > ehIndividual) {
+    if (Partida.modoJogo == ModoJogo.GRUPO) {
         var nomeJogador2 = document.getElementById("nomeJogador2").value;
     }
     document.getElementById("nomeJgVencedor").value = nomeJogador;
