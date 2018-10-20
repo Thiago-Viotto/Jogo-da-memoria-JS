@@ -11,16 +11,16 @@
         <div id="inicio">
             <img id="imgBemVindo" src="../img/bemvindo.png" alt="imagem bem vindo">
             <p class="paragrafo">Escolha a dimensão do tabuleiro</p>
-            <button id="btn2" class="botao-dimensao" onclick="selecionarDimensao(2, this)">2x2</button>
-            <button id="btn3" class="botao-dimensao" onclick="selecionarDimensao(4, this)">4x4</button>
-            <button id="btn4" class="botao-dimensao" onclick="selecionarDimensao(6, this)">6x6</button>
+            <button id="btn2" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
+            <button id="btn3" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
+            <button id="btn4" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>
             <form>
                 <p class="paragrafo">Escolha o modo de jogo: </p>
                 <p id="Ind">
-                  <input id="radioInd" type="radio" name="modo" value="Individual" onclick="verificaModoInd()" style="border: 0px; width: 20px; height: 20px;" checked="true"/>
+                  <input id="radioInd" type="radio" name="modo" value="Individual" onclick="Partida.mudarModoJogo(ModoJogo.INDIVIDUAL);" style="border: 0px; width: 20px; height: 20px;" checked="true"/>
                   <label for="radioInd">Individual</label>
                   
-                  <input id="radioGrupo" type="radio" name="modo" value="Em grupo" onclick="verificaModoGrupo()" style="border: 0px; width: 20px; height: 20px; margin-left: 30px;"/>
+                  <input id="radioGrupo" type="radio" name="modo" value="Em grupo" onclick="Partida.mudarModoJogo(ModoJogo.GRUPO);" style="border: 0px; width: 20px; height: 20px; margin-left: 30px;"/>
                   <label for="radioGrupo">Em grupo</label>
                 </p>
                 <br>
@@ -33,9 +33,9 @@
 
         <div id="tabuleiro">
             <p id="paragrafoTabuleiro">Escolha a dimensão do tabuleiro: </p>
-            <button id="btn5" class="botao-dimensao" onclick="selecionarDimensao(2, this)">2x2</button>
-            <button id="btn6" class="botao-dimensao" onclick="selecionarDimensao(4, this)">4x4</button>
-            <button id="btn7" class="botao-dimensao" onclick="selecionarDimensao(6, this)">6x6</button>
+            <button id="btn5" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
+            <button id="btn6" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
+            <button id="btn7" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>
             <button id="btnIniciar2" onclick="reiniciarJogo()">Iniciar Jogo</button>
 
         </div>

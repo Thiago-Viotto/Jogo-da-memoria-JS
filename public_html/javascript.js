@@ -14,32 +14,68 @@ var ModoJogo = {
   GRUPO: 1
 };
 
+/**
+ * Singleton class
+ */
+var Mesa = {
+  preencherMesa: function(tamanho) {
+    var numeroCartas = tamanho * tamanho;
+    var numeroPares = tamanho * 2;
+    
+    if (tamanho == 2) {
+        figuras = [];
+        
+        for (var i = 0; i < numeroCartas; i++) {
+            
+            var figura = {
+                src: "../img/" + (i % numeroPares) + ".jpg",
+                id: i % (Partida.tamanho)
+            };
+            
+            figuras.push(figura);
+        }
+    }
+
+    if (tamanho == 4) {
+        figuras = [];
+        
+        for (var i = 0; i < numeroCartas; i++) {
+            var figura = {
+                src: "../img4x4/" + (i % numeroPares) + ".jpg",
+                id: i % (Partida.tamanho)
+            };
+            
+            figuras.push(figura);
+        }
+    }
+
+    if (tamanho == 6) {
+        figuras = [];
+        
+        for (var i = 0; i < numeroCartas; i++) {
+            var figura = {
+                src: "../img6x6/" + (i % numeroPares) + ".jpg",
+                id: i % (Partida.tamanho)
+            };
+            figuras.push(figura);
+            //console.log(figuras);
+        }
+    }
+  }
+};
+
 
 /**
  * Singleton class
  */
 var Partida = {
   tamanho: 0,
-  modoJogo: ModoJogo.INDIVIDUAL
-};
-
-
-function verificaModoGrupo() {
-    document.getElementById("nomeJogador2").style.visibility = "visible";
-    
-    Partida.modoJogo = ModoJogo.GRUPO
-}
-
-function verificaModoInd() {
-    document.getElementById("nomeJogador2").style.visibility = "hidden";
-    
-    Partida.modoJogo = ModoJogo.INDIVIDUAL;
-}
-
-function selecionarDimensao(tamanho, botao) {
+  modoJogo: ModoJogo.INDIVIDUAL,
+  
+  selecionarDimensao: function(tamanho, botao) {
     Partida.tamanho = tamanho;
     
-    ajustarImagem();
+    Mesa.preencherMesa(tamanho);
     
     var botoes = document.querySelectorAll(".botao-dimensao");
     for(var b of botoes) {
@@ -47,7 +83,21 @@ function selecionarDimensao(tamanho, botao) {
     }
     
     botao.style.backgroundColor = "#0af";
-}
+  },
+  
+  mudarModoJogo: function(modo) {
+    Partida.modoJogo = modo;
+    
+    if(modo == ModoJogo.GRUPO) {
+      document.getElementById("nomeJogador2").style.visibility = "visible";
+    }
+    else {
+      document.getElementById("nomeJogador2").style.visibility = "hidden";
+    }
+  }
+};
+
+
 
 function iniciarJogo() {
     if (recomeca > 0) {
@@ -72,63 +122,37 @@ function iniciarJogo() {
     gameOver.style.zIndex = -2; //coloca div GameOver atras
     if (limite === 0) {
         figuras = embaralhar(figuras);
-        for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
-            var tabuleiro = document.getElementById("tabuleiro");
-            var div = document.createElement("div");
-            div.setAttribute("class", "carta"); //cria uma classe
-            div.setAttribute("id", "carta" + i); //cria uma div com nomes diferentes de acordo com o i
-            div.style.left = i % (Partida.tamanho * Partida.tamanho / 2) === 0 ? 5 + "px" : i % (Partida.tamanho * Partida.tamanho / 2) * 165 + 5 + "px";
-            div.style.top = i < (Partida.tamanho * Partida.tamanho / 2) ? 5 + "px" : 250 + "px";
+        
+        var tabuleiro = document.getElementById("tabuleiro");
+        
+        for (var linha = 0; linha < Partida.tamanho; linha++) {
+            var linhaElement = document.createElement("div");
+            
+            for(var coluna = 0; coluna < Partida.tamanho; coluna++) {
+                var div = document.createElement("div");
+                div.setAttribute("class", "carta"); //cria uma classe
+                div.setAttribute("id", "carta" + linha); //cria uma div com nomes diferentes de acordo com linha
 
-            div.addEventListener("click", virarCarta, false); //vira a carta quando a carta é clicada          
+                div.addEventListener("click", virarCarta, false); //vira a carta quando a carta é clicada          
 
-            var div2 = document.createElement("div");
-            div2.setAttribute("class", "face Back");
-            div.appendChild(div2);
-            var div3 = document.createElement("div");
-            div3.setAttribute("class", "face Front");
-            div.appendChild(div3);
-            tabuleiro.appendChild(div);
-            document.body.appendChild(tabuleiro);
+
+                var div2 = document.createElement("div");
+                div2.setAttribute("class", "face Back");
+                div.appendChild(div2);
+                var div3 = document.createElement("div");
+                div3.setAttribute("class", "face Front");
+                div.appendChild(div3);
+                
+                linhaElement.appendChild(div);
+            }
+           
+           tabuleiro.appendChild(linhaElement);
         }
+        
+        document.body.appendChild(tabuleiro);
     }
     getCartaFront(); // muda a frente da carta por uma imagem
     limite = 1;
-}
-
-function ajustarImagem() {
-    if (Partida.tamanho == 2) {
-        for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
-            var figura = {
-                src: "../img/" + i + ".jpg",
-                id: i % (Partida.tamanho * Partida.tamanho / 2)
-            };
-            figuras.push(figura);
-            //console.log(figuras);
-        }
-    }
-
-    if (Partida.tamanho == 4) {
-        for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
-            var figura = {
-                src: "../img4x4/" + i + ".jpg",
-                id: i % (Partida.tamanho * Partida.tamanho / 2)
-            };
-            figuras.push(figura);
-            //console.log(figuras);
-        }
-    }
-
-    if (Partida.tamanho == 6) {
-        for (var i = 0; i < Partida.tamanho * Partida.tamanho; i++) {
-            var figura = {
-                src: "../img6x6/" + i + ".jpg",
-                id: i % (Partida.tamanho * Partida.tamanho / 2)
-            };
-            figuras.push(figura);
-            //console.log(figuras);
-        }
-    }
 }
 
 
