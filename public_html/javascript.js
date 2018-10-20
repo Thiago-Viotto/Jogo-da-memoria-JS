@@ -11,14 +11,39 @@ var ModoJogo = {
 /**
  * Class
  */
-var Carta = function(rootElement, frontFaceElement, backFaceElement, figura) {
+var Carta = function(rootElement, frontFaceElement, backFaceElement) {
   this.rootElement = rootElement;
   this.frontFaceElement = frontFaceElement;
   this.backFaceElement = backFaceElement;
-  this.figura = figura;
+  this.virada = false;
 };
 Carta.prototype.virar = function() {
-  
+  if(!this.virada) {
+    this.virada = true;
+    
+    var faces = this.rootElement.getElementsByClassName("face");
+    
+    faces[0].classList.toggle("virado"); //procura e desliga a face
+    faces[1].classList.toggle("virado"); //procura e desliga a face
+  }
+}
+Carta.prototype.desvirar = function() {
+  if(this.virada) {
+    this.virada = false;
+    this.frontFaceElement.classList.toggle("virado");
+    this.backFaceElement.classList.toggle("virado");
+  }
+}
+Carta.prototype.estaVirada = function() {
+  return this.virada;
+}
+Carta.prototype.removerRealce = function() {
+  this.realcado = false;
+  this.frontFaceElement.classList.remove("acertou");
+}
+Carta.prototype.realcar = function() {
+  this.realcado = true;
+  this.frontFaceElement.classList.add("acertou");
 }
 
 
@@ -37,18 +62,12 @@ var Mesa = {
     Mesa.cartas = [];
     
     for (var i = 0; i < numeroCartas; i++) {
-      var figura = {
-        src: "../img/" + (i % numeroPares) + ".jpg",
-        id: i % (Partida.tamanho)
-      };
+      var imgSrc = "../img/" + (i % numeroPares) + ".jpg";
+      var id = i % (Partida.tamanho);
       
       var rootElement = document.createElement("div");
       rootElement.setAttribute("class", "carta");
       rootElement.setAttribute("id", "carta" + i);
-
-      rootElement.addEventListener("click", function() {
-        Mesa.virarCarta(this);
-      }, false);
 
       var backElement = document.createElement("div");
       backElement.setAttribute("class", "face Back");
@@ -56,9 +75,19 @@ var Mesa = {
       
       var frontElement = document.createElement("div");
       frontElement.setAttribute("class", "face Front");
+      frontElement.style.background = "url('" + imgSrc + "')";
+      frontElement.setAttribute("id", id);
       rootElement.appendChild(frontElement);
       
-      var carta = new Carta(rootElement, frontElement, backElement, figura);
+      var carta = new Carta(rootElement, frontElement, backElement);
+
+      // Declarando _carta dentro de uma função para manter seu valor em escopo isolado
+      rootElement.addEventListener("click", (function() {
+        var _carta = carta;
+        return function() {
+          Mesa.virarCarta(_carta);
+        };
+      })(), false);
       
       Mesa.cartas.push(carta);
     }
@@ -76,23 +105,23 @@ var Mesa = {
     Mesa.cartas = novoArray;
   },
   
-  virarCarta: function(cartaElement) {
+  virarCarta: function(carta) {
     if (Mesa.cartasViradas.length < 2) {  //vira duas cartas
-        var faces = cartaElement.getElementsByClassName("face");
-        //console.log(faces[0]); //faceBack
-        if (faces[0].classList.length > 2) {
-            return; //não permite que ao clicar duas vezes na mesma carta, ela desvira
+        
+        if(carta.estaVirada()) {
+          return;
         }
-        faces[0].classList.toggle("virado"); //procura e desliga a face
-        faces[1].classList.toggle("virado"); //procura e desliga a face
-        Mesa.cartasViradas.push(cartaElement);
+        
+        carta.virar();
+        
+        Mesa.cartasViradas.push(carta);
         
         if (Mesa.cartasViradas.length === 2) {
-            if (Mesa.cartasViradas[0].childNodes[1].id === Mesa.cartasViradas[1].childNodes[1].id) {  //acertou duas cartas
-                Mesa.cartasViradas[0].childNodes[0].classList.toggle("acertou");
-                Mesa.cartasViradas[0].childNodes[1].classList.toggle("acertou");
-                Mesa.cartasViradas[1].childNodes[0].classList.toggle("acertou");
-                Mesa.cartasViradas[1].childNodes[1].classList.toggle("acertou");
+            if (Mesa.cartasViradas[0].rootElement.childNodes[1].id === Mesa.cartasViradas[1].rootElement.childNodes[1].id) {  //acertou duas cartas
+                Mesa.cartasViradas[0].rootElement.childNodes[0].classList.toggle("acertou");
+                Mesa.cartasViradas[0].rootElement.childNodes[1].classList.toggle("acertou");
+                Mesa.cartasViradas[1].rootElement.childNodes[0].classList.toggle("acertou");
+                Mesa.cartasViradas[1].rootElement.childNodes[1].classList.toggle("acertou");
 
                 Partida.jogadores[Partida.jogadorAtual].acertos++;
                 
@@ -112,12 +141,12 @@ var Mesa = {
             Partida.proximoJogador();
         }
     } else {
-        Mesa.cartasViradas[0].childNodes[0].classList.toggle("virado"); //no terceiro clique desvira as cartas viradas
-        Mesa.cartasViradas[0].childNodes[1].classList.toggle("virado");
-        Mesa.cartasViradas[1].childNodes[0].classList.toggle("virado");
-        Mesa.cartasViradas[1].childNodes[1].classList.toggle("virado");
+      //no terceiro clique desvira as cartas viradas
+      for(var carta of Mesa.cartasViradas) {
+        carta.desvirar();
+      }
 
-        Mesa.cartasViradas = [];
+      Mesa.cartasViradas = [];
     }
 
   },
@@ -125,11 +154,9 @@ var Mesa = {
   limparMesa: function() {
     Mesa.cartasViradas = [];
     
-    var frontFaces = document.getElementsByClassName("Front");
-    var backFaces = document.getElementsByClassName("Back");
-    for (var i = 0; i < frontFaces.length; i++) {
-        frontFaces[i].classList.remove("virado", "acertou");
-        backFaces[i].classList.remove("virado", "acertou");
+    for (var carta of Mesa.cartas) {
+      carta.desvirar();
+      carta.removerRealce();
     }
   },
   
@@ -150,13 +177,6 @@ var Mesa = {
     }
     
     document.body.appendChild(document.getElementById("tabuleiro"));
-    
-    // muda a frente das cartas por uma imagem
-    var frontFaces = document.getElementsByClassName("Front");
-    for (var i = 0; i < frontFaces.length; i++) {
-        frontFaces[i].style.background = "url('" + Mesa.cartas[i].figura.src + "')";
-        frontFaces[i].setAttribute("id", Mesa.cartas[i].figura.id);
-    }
   }
 };
 
