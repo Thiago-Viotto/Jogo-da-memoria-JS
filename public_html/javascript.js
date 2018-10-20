@@ -66,6 +66,8 @@ var Partida = {
   
   jogadores: [],
   
+  jogadorAtual: 0,
+  
   selecionarDimensao: function(tamanho, botao) {
     Partida.tamanho = tamanho;
     
@@ -99,9 +101,10 @@ var Partida = {
       Partida.jogadores.push(new Jogador(document.getElementById("nome2").value));
     }
     
+    Partida.jogadorAtual = 0;
+    
     if (recomeca > 0) {
         Mesa.embaralhar();
-        contAcertos = 0;
         cartaVirada = [];
         var frontFaces = document.getElementsByClassName("Front");
         var backFaces = document.getElementsByClassName("Back");
@@ -164,7 +167,13 @@ var Partida = {
     //var inicioJogo = document.querySelector("#inicio");
     fimJogo.style.zIndex = 10; //coloca div GameOver na frente 
     acertouCarta(); //seta valores do resultado
-    fimJogo.addEventListener("click", iniciarJogo, false);
+    fimJogo.addEventListener("click", Partida.iniciarJogo, false);
+  },
+  
+  proximoJogador: function() {
+    Partida.jogadorAtual++;
+    Partida.jogadorAtual = Partida.jogadorAtual % Partida.jogadores.length;
+    console.log("Vez do jogador " + (Partida.jogadorAtual + 1) + ":", Partida.jogadores[Partida.jogadorAtual]);
   }
 
 };
@@ -182,8 +191,8 @@ function virarCarta() {
         faces[0].classList.toggle("virado"); //procura e desliga a face
         faces[1].classList.toggle("virado"); //procura e desliga a face
         cartaVirada.push(this);
+        
         if (cartaVirada.length === 2) {
-            console.log(cartaVirada);
             if (cartaVirada[0].childNodes[1].id === cartaVirada[1].childNodes[1].id) {  //acertou duas cartas
                 cartaVirada[0].childNodes[0].classList.toggle("acertou");
                 cartaVirada[0].childNodes[1].classList.toggle("acertou");
@@ -191,15 +200,23 @@ function virarCarta() {
                 cartaVirada[1].childNodes[1].classList.toggle("acertou");
 
                 //acertouCarta();
-                contAcertos++;
+                Partida.jogadores[Partida.jogadorAtual].acertos++;
+                
                 cartaVirada = [];
+                
+                var acertos = Partida.jogadores[0].acertos;
+                if(Partida.modoJogo == ModoJogo.GRUPO) {
+                  acertos += Partida.jogadores[1].acertos;
+                }
+                
                 // se acertou todas as cartas
-                if (contAcertos === Partida.tamanho * Partida.tamanho / 2) {
+                if (acertos === Partida.tamanho * Partida.tamanho / 2) {
                     Partida.gameOver();
                     recomeca++;
                 }
-
             }
+            
+            Partida.proximoJogador();
         }
     } else {
         //console.log(cartaVirada);
