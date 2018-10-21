@@ -422,13 +422,26 @@ var Partida = {
 
     var divHistorico = document.getElementById("historicoResultado");
     divHistorico.innerHTML = "";
+    
+    var first = true;
+    var addedTitle = false;
+    
     for(historico of Historico.registros) {
+        if(!first) {
+          if(!addedTitle) {
+            divHistorico.innerHTML += "<h2>Histórico:</h2>";
+            addedTitle = true;
+          }
+          divHistorico.innerHTML += "<hr>";
+        }
+        
         divHistorico.innerHTML += "<p class='paragrafo'>Nome do jogador vencedor: </p><input type='text' value='" + historico.nomeVencedor + "' readonly/>";
         divHistorico.innerHTML += "<p class='paragrafo'>Dimensões do tabuleiro: </p><input type='text' value='" + historico.dimensao + "' readonly/>";
         divHistorico.innerHTML += "<p class='paragrafo'>Modo de jogo: </p><input type='text' value='" + (Partida.modoJogo == ModoJogo.INDIVIDUAL? "Individual" : "Grupo") + "' readonly/>";
         divHistorico.innerHTML += "<p class='paragrafo'>Total de pontos do vencedor: </p><input type='text' value='" + historico.pontosVencedor + "' readonly/>";
         divHistorico.innerHTML += "<p class='paragrafo'>Total de tempo gasto na partida: </p><input type='text' value='" + historico.tempoPartida + " segundos' readonly/>";
-        divHistorico.innerHTML += "<hr>";
+        
+        first = false;
     }
     
   }

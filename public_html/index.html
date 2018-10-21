@@ -47,7 +47,7 @@
                 <button id="btn6" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
                 <button id="btn7" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>
                 <button id="btnIniciar2" onclick="Partida.reiniciarJogo()">Reiniciar Jogo</button>
-                <button id="voltar" onclick="location.href = './index.html';">Voltar</button>
+                <button id="voltar" onclick="ControladorTelas.exibirInicio()">Voltar</button>
 
                 <p>Opções de ajuda</p>
                 <button id="btnMostrarCartas" onclick="Mesa.exibirCartasOcultas()">Exibir cartas ocultas</button>
@@ -57,7 +57,8 @@
 
             <div id="GameOver" onclick="Partida.iniciarJogo(false)">
                 <img id="imgGameOver" src="../img/gameover.png" alt="imagem gameover">
-                <div id=historicoResultado></div>
+                <p style="text-align: center; font-size: 70%; margin-bottom: 20px;">Fim de jogo. (Clique para continuar)</p>
+                <div id="historicoResultado" style="padding-bottom: 50px;"></div>
             </div>
           </div>
         </div>
