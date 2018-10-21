@@ -175,12 +175,21 @@ var Mesa = {
     Mesa.cartasViradas.push(carta);
     
     if (Mesa.cartasViradas.length === 2) {
+      // No modo individual, cada jogada é um ponto para o jogador
+      if (Partida.modoJogo == ModoJogo.INDIVIDUAL) {
+        Partida.jogadores[Partida.jogadorAtual].pontos++;
+      }
+      
       if (Mesa.cartasViradas[0].identificador === Mesa.cartasViradas[1].identificador) {
           //acertou duas cartas
           Mesa.cartasViradas[0].realcar();
           Mesa.cartasViradas[1].realcar();
 
+          // No modo grupo, cada acerto é um ponto para o jogador
           Partida.jogadores[Partida.jogadorAtual].acertos++;
+          if (Partida.modoJogo == ModoJogo.GRUPO) {
+            Partida.jogadores[Partida.jogadorAtual].pontos++;
+          }
           
           Mesa.cartasViradas = [];
           
@@ -238,6 +247,7 @@ var Mesa = {
 var Jogador = function(nome) {
   this.nome = nome;
   this.acertos = 0;
+  this.pontos = 0;
 }
 
 /**
@@ -353,8 +363,8 @@ var Partida = {
     var jogadorMaiorPontuacao = null;
     
     for(var jogador of Partida.jogadores) {
-      if(jogador.acertos >= maiorPontuacao) {
-        maiorPontuacao = jogador.acertos;
+      if(jogador.pontos >= maiorPontuacao) {
+        maiorPontuacao = jogador.pontos;
         jogadorMaiorPontuacao = jogador;
       }
     }
@@ -369,7 +379,7 @@ var Partida = {
     document.getElementById("nomeJgVencedor").value = nomeJogador;
     document.getElementById("dimEscolhida").value = Partida.tamanho + "x" + Partida.tamanho;
     document.getElementById("modoEscolhido").value = Partida.modoJogo == ModoJogo.INDIVIDUAL? "Individual" : "Grupo";
-    document.getElementById("totalPontos").value = jogadorMaiorPontuacao.acertos;
+    document.getElementById("totalPontos").value = jogadorMaiorPontuacao.pontos;
     document.getElementById("totalTempo").value = ((Partida.tempoFinal.getTime() - Partida.tempoInicial.getTime()) / 1000).toFixed(2) + " segundos";
   }
 
