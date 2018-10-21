@@ -136,7 +136,7 @@ input[type=radio] {
 
 #imgGameOver{
     width: 600px;
-    height: 200px;
+    max-width: 90%;
 }
 
 .carta {
