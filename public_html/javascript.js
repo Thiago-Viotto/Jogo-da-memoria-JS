@@ -268,7 +268,13 @@ var Mesa = {
         for(var coluna = 0; coluna < tamanho; coluna++) {
             var carta = Mesa.cartas[linha * tamanho + coluna];
             
-            carta.rootElement.style.zoom = 2 / (tamanho / 1.4);
+            var zoomJanela = 1;
+            
+            if(window.innerWidth < 600) {
+              zoomJanela = 0.6;
+            }
+            
+            carta.rootElement.style.zoom = 2 / (tamanho / 1.4) * zoomJanela;
             
             linhaElement.appendChild(carta.rootElement);
         }
