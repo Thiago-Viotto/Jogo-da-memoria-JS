@@ -157,15 +157,35 @@ var Mesa = {
   },
   
   exibirCartasOcultas: function() {
+    Mesa.desabilitarBotoesAoExibir();
     for(var c of Mesa.cartas) {
       c.exibir();
     }  
   },
 
+  desabilitarBotoesAoExibir: function() {
+    document.getElementById("btn5").disabled = true;
+    document.getElementById("btn6").disabled = true;
+    document.getElementById("btn7").disabled = true;
+    document.getElementById("btnIniciar2").disabled = true;
+    document.getElementById("btnMostrarCartas").disabled = true;
+    document.getElementById("btnOcultarCartas").disabled = false;
+  },
+
   ocultarCartasExibidas: function() {
+    Mesa.habilitarBotoesAoOcultar();
     for(var c of Mesa.cartas) {
       c.ocultar();
     }  
+  },
+
+  habilitarBotoesAoOcultar: function() {
+    document.getElementById("btn5").disabled = false;
+    document.getElementById("btn6").disabled = false;
+    document.getElementById("btn7").disabled = false;
+    document.getElementById("btnIniciar2").disabled = false;
+    document.getElementById("btnMostrarCartas").disabled = false;
+    document.getElementById("btnOcultarCartas").disabled = true;
   },
 
   virarCarta: function(carta) {
@@ -344,6 +364,8 @@ var Partida = {
     Mesa.embaralhar();
     
     Mesa.gerarCartas(Partida.tamanho);
+
+    Mesa.habilitarBotoesAoOcultar();
     
     Partida.state = GameState.RUNNING;
   },
@@ -355,11 +377,7 @@ var Partida = {
   gameOver: function() {
     Partida.state = GameState.NOT_RUNNING;
     Partida.tempoFinal = new Date();
-    
-    var vencedor = Partida.jogadores[Partida.jogadorAtual];
-    var tempoPartida = ((Partida.tempoFinal.getTime() - Partida.tempoInicial.getTime()) / 1000).toFixed(2);
-    Historico.registros.push(new RegistroHistorico(vencedor.nome, Partida.tamanho, Partida.modoJogo, vencedor.pontos, tempoPartida));
-    
+        
     setTimeout(function() {
       ControladorTelas.exibirResultado();
       
@@ -398,11 +416,20 @@ var Partida = {
       var nomeJogador2 = Partida.jogadores[1].nome;
     }
     
-    document.getElementById("nomeJgVencedor").value = nomeJogador;
-    document.getElementById("dimEscolhida").value = Partida.tamanho + "x" + Partida.tamanho;
-    document.getElementById("modoEscolhido").value = Partida.modoJogo == ModoJogo.INDIVIDUAL? "Individual" : "Grupo";
-    document.getElementById("totalPontos").value = jogadorMaiorPontuacao.pontos;
-    document.getElementById("totalTempo").value = ((Partida.tempoFinal.getTime() - Partida.tempoInicial.getTime()) / 1000).toFixed(2) + " segundos";
+    var tempoPartida = ((Partida.tempoFinal.getTime() - Partida.tempoInicial.getTime()) / 1000).toFixed(2);
+    Historico.registros.push(new RegistroHistorico(nomeJgVencedor, Partida.tamanho, Partida.modoJogo, jogadorMaiorPontuacao.pontos, tempoPartida));
+
+    var divHistorico = document.getElementById("historicoResultado");
+    divHistorico.innerHTML = "";
+    for(historico of Historico.registros) {
+        divHistorico.innerHTML += "<p class='paragrafo'>Nome do jogador vencedor: </p><input type='text' value='" + historico.nomeVencedor + "' readonly/>";
+        divHistorico.innerHTML += "<p class='paragrafo'>Dimensões do tabuleiro: </p><input type='text' value='" + historico.dimensao + "' readonly/>";
+        divHistorico.innerHTML += "<p class='paragrafo'>Modo de jogo: </p><input type='text' value='" + (Partida.modoJogo == ModoJogo.INDIVIDUAL? "Individual" : "Grupo") + "' readonly/>";
+        divHistorico.innerHTML += "<p class='paragrafo'>Total de pontos do vencedor: </p><input type='text' value='" + historico.pontosVencedor + "' readonly/>";
+        divHistorico.innerHTML += "<p class='paragrafo'>Total de tempo gasto na partida: </p><input type='text' value='" + historico.tempoPartida + " segundos' readonly/>";
+        divHistorico.innerHTML += "<hr>";
+    }
+    
   }
 
 };

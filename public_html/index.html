@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="estilo.css">
         <link href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz" rel="stylesheet">
-        <script type="text/javascript" src="javascript.js"></script>
+        <script src="javascript.js"></script>
         <title>Jogo da memória</title>
     </head>
     <body>
@@ -21,7 +21,7 @@
                 <div style="margin-top: 15px;">
                     <p class="paragrafo">Escolha o modo de jogo: </p>
                     
-                    <input id="radioInd" type="radio" name="modo" value="Individual" onclick="Partida.mudarModoJogo(ModoJogo.INDIVIDUAL);" checked="true"/>
+                    <input id="radioInd" type="radio" name="modo" value="Individual" onclick="Partida.mudarModoJogo(ModoJogo.INDIVIDUAL);" checked/>
                     <label for="radioInd" style="font-size: 30px; margin-right: 25px;">Individual</label>
                     
                     <input id="radioGrupo" type="radio" name="modo" value="Em grupo" onclick="Partida.mudarModoJogo(ModoJogo.GRUPO);"/>
@@ -34,7 +34,7 @@
                       <label for="nome2">Nome do jogador 2:</label> <input type="text" id="nome2">
                     </div>
                 </div>
-                <button id="btnIniciar" onclick="Partida.iniciarJogo(true)">Iniciar Jogo</button>
+                <button id="btnIniciar" onclick="Partida.iniciarJogo(false)">Iniciar Jogo</button>
             </div>
 
             <div id="tabuleiro">
@@ -46,7 +46,8 @@
                 <button id="btn5" class="botao-dimensao" onclick="Partida.selecionarDimensao(2, this)">2x2</button>
                 <button id="btn6" class="botao-dimensao" onclick="Partida.selecionarDimensao(4, this)">4x4</button>
                 <button id="btn7" class="botao-dimensao" onclick="Partida.selecionarDimensao(6, this)">6x6</button>
-                <button id="btnIniciar2" onclick="Partida.reiniciarJogo()">Iniciar Jogo</button>
+                <button id="btnIniciar2" onclick="Partida.reiniciarJogo()">Reiniciar Jogo</button>
+                <button id="voltar" onclick="location.href = './index.html';">Voltar</button>
 
                 <p>Opções de ajuda</p>
                 <button id="btnMostrarCartas" onclick="Mesa.exibirCartasOcultas()">Exibir cartas ocultas</button>
@@ -56,14 +57,7 @@
 
             <div id="GameOver" onclick="Partida.iniciarJogo(false)">
                 <img id="imgGameOver" src="../img/gameover.png" alt="imagem gameover">
-                <form>
-                    <p class="paragrafo">Nome do jogador vencedor: </p><input id="nomeJgVencedor" type="text" readonly/>
-                    <p class="paragrafo">Dimensões do tabuleiro: </p><input id="dimEscolhida" type="text" readonly/>
-                    <p class="paragrafo">Modo de jogo: </p><input id="modoEscolhido" type="text" readonly/>
-                    <p class="paragrafo">Total de pontos do vencedor: </p><input id="totalPontos" type="text" readonly/>
-                    <p class="paragrafo">Total de tempo gasto na partida: </p><input id="totalTempo" type="text" readonly/>
-
-                </form>
+                <div id=historicoResultado></div>
             </div>
           </div>
         </div>
