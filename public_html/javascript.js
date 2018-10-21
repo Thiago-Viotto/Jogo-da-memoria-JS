@@ -417,6 +417,7 @@ var Partida = {
     }
     
     var tempoPartida = ((Partida.tempoFinal.getTime() - Partida.tempoInicial.getTime()) / 1000).toFixed(2);
+    Historico.registros.reverse();
     Historico.registros.push(new RegistroHistorico(nomeJgVencedor, Partida.tamanho, Partida.modoJogo, jogadorMaiorPontuacao.pontos, tempoPartida));
     Historico.registros.reverse();
 
