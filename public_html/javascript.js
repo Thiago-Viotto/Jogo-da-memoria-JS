@@ -219,7 +219,7 @@ var Mesa = {
           
           // se acertou todas as cartas
           if (acertos === Mesa.cartas.length / 2) {
-              Partida.gameOver();
+            Partida.gameOver();
           }
       }
       
@@ -355,6 +355,10 @@ var Partida = {
   gameOver: function() {
     Partida.state = GameState.NOT_RUNNING;
     Partida.tempoFinal = new Date();
+    
+    var vencedor = Partida.jogadores[Partida.jogadorAtual];
+    var tempoPartida = ((Partida.tempoFinal.getTime() - Partida.tempoInicial.getTime()) / 1000).toFixed(2);
+    Historico.registros.push(new RegistroHistorico(vencedor.nome, Partida.tamanho, Partida.modoJogo, vencedor.pontos, tempoPartida));
     
     setTimeout(function() {
       ControladorTelas.exibirResultado();
