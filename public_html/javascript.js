@@ -11,6 +11,24 @@ var ModoJogo = {
 /**
  * Singleton class
  */
+var Historico = {
+  registros: []
+};
+
+/**
+ * Class
+ */
+var RegistroHistorico = function(nomeVencedor, dimensao, modoJogo, pontosVencedor, tempoPartida) {
+  this.nomeVencedor = nomeVencedor;
+  this.dimensao = dimensao;
+  this.modoJogo = modoJogo;
+  this.pontosVencedor = pontosVencedor;
+  this.tempoPartida = tempoPartida;
+};
+
+/**
+ * Singleton class
+ */
 var ControladorTelas = {
   exibirInicio: function() {
     document.getElementById("inicio").style.display = "block";
