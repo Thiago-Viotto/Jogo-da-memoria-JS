@@ -99,13 +99,13 @@ input[type=radio] {
 }
 
 #inicio {
-    background: url("../img/fundoDZ.jpg");
+    background: url("img/fundoDZ.jpg");
     background-size: cover;
     z-index: 1;
 }
 
 #tabuleiro {
-    background: url("../img/fundo roxo.jpg");
+    background: url("img/fundo roxo.jpg");
     background-size: 100% 100%;
     z-index: 5;
 }
@@ -170,7 +170,7 @@ input[type=radio] {
 }
 
 .Back{
-    background: url("../img/verso.jpg");
+    background: url("img/verso.jpg");
     width: 100%;
     border-radius: 10px;
     height: 100%;

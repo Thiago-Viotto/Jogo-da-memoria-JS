@@ -116,7 +116,7 @@ var Mesa = {
     for (var i = 0; i < numeroCartas; i++) {
       var identificador = i % (Partida.tamanho * Partida.tamanho / 2);
       
-      var imgSrc = "../img/cartas/" + identificador + ".jpg";
+      var imgSrc = "img/cartas/" + identificador + ".jpg";
       
       var rootElement = document.createElement("div");
       rootElement.setAttribute("class", "carta");
